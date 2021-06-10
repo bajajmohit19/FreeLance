@@ -1,29 +1,18 @@
 import React from 'react';
-import { View, Text, StyleSheet, ScrollView } from 'react-native';
-import { white, green } from '../../components/config/colors';
+import {View, Text, StyleSheet, ScrollView} from 'react-native';
+import {white, green} from '../../components/config/colors';
 import AntIcon from 'react-native-vector-icons/AntDesign';
-import { Avatar } from '../../components';
-import { Icon } from 'src/components';
+import {Avatar} from '../../components';
+import {Icon} from 'src/components';
 
 function ShowBiz() {
   return (
-    <ScrollView
-      style={{
-        flex: 1,
-        // backgroundColor:'#71977b'
-      }}>
-      <View
-        style={styles.headerView}>
-        <Text
-          style={styles.headertext}>
-          My Biz
-        </Text>
-        <Text style={styles.headerBottom}>
-          Sell your Products here.
-        </Text>
+    <ScrollView>
+      <View style={styles.headerView}>
+        <Text style={styles.headertext}>My Biz</Text>
+        <Text style={styles.headerBottom}>Sell your Products here.</Text>
       </View>
-      <View
-        style={styles.avtarView}>
+      <View style={styles.avtarView}>
         <View style={styles.iconView}>
           <Avatar
             icon={{
@@ -32,12 +21,8 @@ function ShowBiz() {
             }}
             rounded
             size={55}
-            overlayContainerStyle={{
-              backgroundColor: '#000',
-            }}
+            overlayContainerStyle={styles.overlayStyle}
           />
-
-          
 
           <Text style={styles.txtStyle}>TradeKhata</Text>
         </View>
@@ -49,9 +34,7 @@ function ShowBiz() {
             }}
             rounded
             size={55}
-            overlayContainerStyle={{
-              backgroundColor: '#000',
-            }}
+            overlayContainerStyle={styles.overlayStyle}
           />
           <Text style={styles.txtStyle}>Post Your Requirment</Text>
         </View>
@@ -63,9 +46,7 @@ function ShowBiz() {
             }}
             rounded
             size={55}
-            overlayContainerStyle={{
-              backgroundColor: '#000',
-            }}
+            overlayContainerStyle={styles.overlayStyle}
           />
           <Text style={styles.txtStyle}>Rewards</Text>
         </View>
@@ -77,15 +58,12 @@ function ShowBiz() {
             }}
             rounded
             size={55}
-            overlayContainerStyle={{
-              backgroundColor: '#000',
-            }}
+            overlayContainerStyle={styles.overlayStyle}
           />
           <Text style={styles.txtStyle}>Services</Text>
         </View>
       </View>
-      <View
-        style={styles.avtarView}>
+      <View style={styles.avtarView}>
         <View style={styles.iconView}>
           <Avatar
             icon={{
@@ -94,9 +72,7 @@ function ShowBiz() {
             }}
             rounded
             size={55}
-            overlayContainerStyle={{
-              backgroundColor: '#000',
-            }}
+            overlayContainerStyle={styles.overlayStyle}
           />
           <Text style={styles.txtStyle}>Check GST</Text>
         </View>
@@ -108,9 +84,7 @@ function ShowBiz() {
             }}
             rounded
             size={55}
-            overlayContainerStyle={{
-              backgroundColor: '#000',
-            }}
+            overlayContainerStyle={styles.overlayStyle}
           />
           <Text style={styles.txtStyle}>Call Logs</Text>
         </View>
@@ -122,9 +96,7 @@ function ShowBiz() {
             }}
             rounded
             size={55}
-            overlayContainerStyle={{
-              backgroundColor: '#000',
-            }}
+            overlayContainerStyle={styles.overlayStyle}
           />
           <Text style={styles.txtStyle}>Buy Leads</Text>
         </View>
@@ -136,63 +108,34 @@ function ShowBiz() {
             }}
             rounded
             size={55}
-            overlayContainerStyle={{
-              backgroundColor: '#000',
-            }}
+            overlayContainerStyle={styles.overlayStyle}
           />
           <Text style={styles.txtStyle}>See All</Text>
         </View>
       </View>
-      <View
-        style={{ display: 'flex', justifyContent: 'space-between', margin: 10 }}>
-        <View
-          style={{ display: 'flex', alignItems: 'center', padding: 5 }}
-          style={styles.promotionDiv}>
+      <View style={styles.productContainer}>
+        <View style={styles.promotionDiv}>
           <View>
             <Text style={styles.textName}>Products</Text>
           </View>
-          <View
-            style={{
-              display: 'flex',
-              justifyContent: 'space-between',
-              flexDirection: 'row',
-              padding: 10,
-            }}>
-           <Avatar
-            icon={{
-              name: 'box',
-              size: 22,
-            }}
-            rounded
-            size={55}
-            overlayContainerStyle={{
-              backgroundColor: '#000',
-            }}
-          />
-            <Text
-              style={{
-                color: 'white',
-                fontWeight: '700',
-                marginTop: 20,
-                fontSize: 18,
-              }}>
-              5
-            </Text>
+          <View style={styles.cardStyle}>
+            <Avatar
+              icon={{
+                name: 'box',
+                size: 22,
+              }}
+              rounded
+              size={55}
+              overlayContainerStyle={styles.overlayStyle}
+            />
+            <Text style={styles.qtyStyle}>5</Text>
           </View>
         </View>
-        <View
-          style={{ display: 'flex', justifyContent: 'space-around' }}
-          style={styles.promotionDiv}>
+        <View style={styles.promotionDiv}>
           <View>
             <Text style={styles.textName}>Orders</Text>
           </View>
-          <View
-            style={{
-              display: 'flex',
-              justifyContent: 'space-between',
-              flexDirection: 'row',
-              padding: 10,
-            }}>
+          <View style={styles.cardStyle}>
             <Avatar
               icon={{
                 name: 'archive',
@@ -200,19 +143,9 @@ function ShowBiz() {
               }}
               rounded
               size={55}
-              overlayContainerStyle={{
-                backgroundColor: '#000',
-              }}
+              overlayContainerStyle={styles.overlayStyle}
             />
-            <Text
-              style={{
-                color: 'white',
-                fontWeight: '700',
-                marginTop: 20,
-                fontSize: 18,
-              }}>
-              10
-            </Text>
+            <Text style={styles.qtyStyle}>10</Text>
           </View>
         </View>
       </View>
@@ -240,12 +173,12 @@ const styles = StyleSheet.create({
   },
   txtStyle: {
     marginTop: 10,
-    textAlign: 'center'
+    textAlign: 'center',
   },
   iconView: {
     width: '25%',
     alignItems: 'center',
-    padding: 5
+    padding: 5,
   },
   avtarView: {
     margin: 10,
@@ -253,22 +186,42 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
     flexDirection: 'row',
   },
-  headerView : {
+  headerView: {
     display: 'flex',
     justifyContent: 'space-between',
     marginTop: 10,
   },
-  headertext : {
+  headertext: {
     textAlign: 'center',
     fontSize: 18,
     color: '#000',
     fontWeight: '700',
   },
-  headerBottom : {
-    textAlign: 'center', 
-    color: '#BDBDBD', 
-    fontSize: 12 
-  }
+  headerBottom: {
+    textAlign: 'center',
+    color: '#BDBDBD',
+    fontSize: 12,
+  },
+  overlayStyle: {
+    backgroundColor: '#000',
+  },
+  productContainer: {
+    display: 'flex',
+    justifyContent: 'space-between',
+    margin: 10,
+  },
+  qtyStyle: {
+    color: 'white',
+    fontWeight: '700',
+    marginTop: 20,
+    fontSize: 18,
+  },
+  cardStyle: {
+    display: 'flex',
+    justifyContent: 'space-between',
+    flexDirection: 'row',
+    padding: 10,
+  },
 });
 
 export default ShowBiz;

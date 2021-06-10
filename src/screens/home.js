@@ -46,7 +46,7 @@ const containers = {
   banners: Banners,
   text: TextInfo,
   countdown: CountDown,
-  blogs: BlogList,
+ 
   testimonials: Testimonials,
   button: Button,
   vendors: Vendors,

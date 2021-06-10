@@ -30,9 +30,8 @@ class EditAccount extends React.Component {
         first_name: user.first_name || '',
         last_name: user.last_name || '',
         email: user.user_email || '',
-        phone_number: '+918700270870',
+        phone_number: '+919999999999',
         country_no: '',
-
       },
       errors: null,
     };
@@ -84,7 +83,7 @@ class EditAccount extends React.Component {
       auth: {pendingUpdateCustomer},
     } = this.props;
     const {data, errors} = this.state;
-    const {first_name, last_name, email,phone_number, country_code} = data;
+    const {first_name, last_name, email, phone_number, country_code} = data;
 
     return (
       <ThemedView isFullView>
@@ -116,17 +115,37 @@ class EditAccount extends React.Component {
                 error={errors && errors.email}
                 keyboardType="email-address"
               />
-               <InputMobile
-                      value={phone_number}
-                      initialCountry={INITIAL_COUNTRY}
-                      onChangePhoneNumber={({value, code, isoCode}) =>
-                        this.changeData({phone_number: value, country_no: code, country_code: isoCode,})
-                      }
-                      error={errors && errors.phone_number}
-                    />
- <Input
-                label={t('inputs:text_address_account')}
-               
+              <InputMobile
+                value={phone_number}
+                initialCountry={INITIAL_COUNTRY}
+                onChangePhoneNumber={({value, code, isoCode}) =>
+                  this.changeData({
+                    phone_number: value,
+                    country_no: code,
+                    country_code: isoCode,
+                  })
+                }
+                error={errors && errors.phone_number}
+              />
+              <Input
+                label={'Country'}
+                onChangeText={(value) => this.changeData('email', value)}
+                error={errors && errors.email}
+              />
+              <Input
+                label={'Street Address'}
+                onChangeText={(value) => this.changeData('email', value)}
+                error={errors && errors.email}
+                keyboardType="email-address"
+              />
+              <Input
+                label={'City'}
+                onChangeText={(value) => this.changeData('email', value)}
+                error={errors && errors.email}
+                keyboardType="email-address"
+              />
+              <Input
+                label={'postcode'}
                 onChangeText={(value) => this.changeData('email', value)}
                 error={errors && errors.email}
                 keyboardType="email-address"

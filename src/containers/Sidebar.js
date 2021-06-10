@@ -13,6 +13,7 @@ import {padding, margin} from 'src/components/config/spacing';
 import {homeTabs, mainStack} from 'src/config/navigator';
 import {excludeCategory} from '../utils/category';
 import {exclude_categories_sidebar} from '../config/category';
+import HeaderMe from '../screens/profile/containers/HeaderMe';
 
 class Sidebar extends React.Component {
   handlePage = (router, params = {}) => {
@@ -29,6 +30,14 @@ class Sidebar extends React.Component {
       {
         id: '1',
         name: t('common:text_home'),
+        router: mainStack.home_tab,
+        params: {
+          screen: homeTabs.home_drawer,
+        },
+      },
+      {
+        id: '2',
+        name: 'Become a Seller',
         router: mainStack.home_tab,
         params: {
           screen: homeTabs.home_drawer,
@@ -75,7 +84,7 @@ class Sidebar extends React.Component {
       <ThemedView isFullView>
         <ScrollView>
         
-        
+        <HeaderMe />
        
           {dataHelpInfo.map((value) => (
             <ListItem
