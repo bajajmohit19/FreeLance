@@ -1,25 +1,25 @@
 import React from 'react';
 
-import {connect} from 'react-redux';
+import { connect } from 'react-redux';
 import moment from 'moment';
-import {DrawerActions} from '@react-navigation/native';
+import { DrawerActions } from '@react-navigation/native';
 
-import {ScrollView, View, Dimensions} from 'react-native';
+import { ScrollView, View, Dimensions } from 'react-native';
 
-import {ThemedView, Header} from 'src/components';
-import {IconHeader, Logo, CartIcon} from 'src/containers/HeaderComponent';
+import { ThemedView, Header, SearchBar } from 'src/components';
+import { IconHeader, Logo, CartIcon } from 'src/containers/HeaderComponent';
 import ModalHomePopup from 'src/containers/ModalHomePopup';
-
-import {fetchCategories} from 'src/modules/category/actions';
-import {categorySelector} from 'src/modules/category/selectors';
-import {fetchSettingSuccess} from 'src/modules/common/actions';
+import { Avatar } from '../components'
+import { fetchCategories } from 'src/modules/category/actions';
+import { categorySelector } from 'src/modules/category/selectors';
+import { fetchSettingSuccess } from 'src/modules/common/actions';
 import {
   dataConfigSelector,
   toggleSidebarSelector,
   expireConfigSelector,
 } from 'src/modules/common/selectors';
 
-import {fetchSetting} from 'src/modules/common/service';
+import { fetchSetting } from 'src/modules/common/service';
 
 // Containers
 import Slideshow from './home/containers/Slideshow';
@@ -36,7 +36,7 @@ import Vendors from './home/containers/Vendors';
 import Search from './home/containers/Search';
 import Divider from './home/containers/Divider';
 
-const {width} = Dimensions.get('window');
+const { width } = Dimensions.get('window');
 
 const containers = {
   slideshow: Slideshow,
@@ -79,17 +79,17 @@ const widthComponent = (spacing) => {
 
 class HomeScreen extends React.Component {
   componentDidMount() {
-    const {dispatch} = this.props;
+    const { dispatch } = this.props;
     this.getConfig();
     dispatch(fetchCategories());
   }
 
   getConfig = async () => {
     try {
-      const {dispatch} = this.props;
+      const { dispatch } = this.props;
       // Fetch setting
       let settings = await fetchSetting();
-      const {configs, templates, ...rest} = settings;
+      const { configs, templates, ...rest } = settings;
       dispatch(
         fetchSettingSuccess({
           settings: rest,
@@ -116,10 +116,19 @@ class HomeScreen extends React.Component {
       </View>
     );
   }
-
+  currentLocation = () => {
+    navigator.geolocation.getCurrentPosition(
+      position => {
+        const location = JSON.stringify(position);
+        console.log(location)
+      },
+      error => Alert.alert(error.message),
+      { enableHighAccuracy: true, timeout: 20000, maximumAge: 1000 }
+    );
+  }
   render() {
     // const { category, product } = this.props;
-    const {config, toggleSidebar, navigation} = this.props;
+    const { config, toggleSidebar, navigation } = this.props;
 
     return (
       <ThemedView isFullView>
@@ -133,15 +142,28 @@ class HomeScreen extends React.Component {
               />
             ) : null
           }
-          centerComponent={<Logo/>}
-          rightComponent={<CartIcon/>}
+          centerComponent={<SearchBar cancelButton={false} inputContainerStyle={{ width: 260 }} containerStyle={{ width: 200, width: 300, marginLeft: 5 }} />}
+          // rightComponent={<CartIcon/>}
+          rightComponent={<Avatar
+            icon={{
+              name: 'map-pin',
+              size: 20,
+              color: '#000'
+            }}
+            rounded
+            size={22}
+            overlayContainerStyle={{
+              backgroundColor: '#fff',
+            }}
+            onPress={this.currentLocation}
+          />}
         />
         <ScrollView
           showsHorizontalScrollIndicator={false}
           showsVerticalScrollIndicator={false}>
           {config.map((data) => this.renderContainer(data))}
         </ScrollView>
-        <ModalHomePopup/>
+        <ModalHomePopup />
       </ThemedView>
     );
   }

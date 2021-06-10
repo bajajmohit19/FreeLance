@@ -1,10 +1,10 @@
-import React, {Component} from 'react';
-import {StyleSheet, Modal, View, ActivityIndicator} from 'react-native';
-import {withTheme} from './config';
+import React, { Component } from 'react';
+import { StyleSheet, Modal, View, ActivityIndicator } from 'react-native';
+import { withTheme } from './config';
 
 class Loading extends Component {
   render() {
-    const {color, visible} = this.props;
+    const { color, visible } = this.props;
     return (
       <Modal animationType="none" transparent visible={visible}>
         <View style={[styles.viewLoading]}>

@@ -1,9 +1,9 @@
 import React from 'react';
-import {View, Text, StyleSheet, ScrollView} from 'react-native';
-import {white} from '../../components/config/colors';
+import { View, Text, StyleSheet, ScrollView } from 'react-native';
+import { white, green } from '../../components/config/colors';
 import AntIcon from 'react-native-vector-icons/AntDesign';
-import {Avatar} from '../../components';
-import {Icon} from 'src/components';
+import { Avatar } from '../../components';
+import { Icon } from 'src/components';
 
 function ShowBiz() {
   return (
@@ -13,32 +13,18 @@ function ShowBiz() {
         // backgroundColor:'#71977b'
       }}>
       <View
-        style={{
-          display: 'flex',
-          justifyContent: 'space-between',
-          marginTop: 10,
-        }}>
+        style={styles.headerView}>
         <Text
-          style={{
-            textAlign: 'center',
-            fontSize: 18,
-            color: '#000',
-            fontWeight: '700',
-          }}>
+          style={styles.headertext}>
           My Biz
         </Text>
-        <Text style={{textAlign: 'center', color: '#BDBDBD', fontSize: 12}}>
+        <Text style={styles.headerBottom}>
           Sell your Products here.
         </Text>
       </View>
       <View
-        style={{
-          margin: 10,
-          display: 'flex',
-          justifyContent: 'space-between',
-          flexDirection: 'row',
-        }}>
-        <View style={{width: '25%', alignItems: 'center', padding: 5}}>
+        style={styles.avtarView}>
+        <View style={styles.iconView}>
           <Avatar
             icon={{
               name: 'book',
@@ -49,13 +35,13 @@ function ShowBiz() {
             overlayContainerStyle={{
               backgroundColor: '#000',
             }}
-          >
+          />
 
-          </Avatar>
+          
 
           <Text style={styles.txtStyle}>TradeKhata</Text>
         </View>
-        <View style={{width: '25%', alignItems: 'center', padding: 5}}>
+        <View style={styles.iconView}>
           <Avatar
             icon={{
               name: 'clipboard',
@@ -69,7 +55,7 @@ function ShowBiz() {
           />
           <Text style={styles.txtStyle}>Post Your Requirment</Text>
         </View>
-        <View style={{width: '25%', alignItems: 'center', padding: 5}}>
+        <View style={styles.iconView}>
           <Avatar
             icon={{
               name: 'gift',
@@ -83,11 +69,11 @@ function ShowBiz() {
           />
           <Text style={styles.txtStyle}>Rewards</Text>
         </View>
-        <View style={{width: '25%', alignItems: 'center', padding: 5}}>
+        <View style={styles.iconView}>
           <Avatar
             icon={{
-              name: 'gift',
-              size: 14,
+              name: 'thumbs-up',
+              size: 22,
             }}
             rounded
             size={55}
@@ -99,73 +85,68 @@ function ShowBiz() {
         </View>
       </View>
       <View
-        style={{
-          margin: 10,
-          display: 'flex',
-          justifyContent: 'space-between',
-          flexDirection: 'row',
-        }}>
-        <View style={{width: '25%', alignItems: 'center', padding: 5}}>
+        style={styles.avtarView}>
+        <View style={styles.iconView}>
           <Avatar
             icon={{
-              name: 'percent',
-              size: 14,
+              name: 'check-square',
+              size: 22,
             }}
             rounded
             size={55}
             overlayContainerStyle={{
-              backgroundColor: '#fff',
+              backgroundColor: '#000',
             }}
           />
           <Text style={styles.txtStyle}>Check GST</Text>
         </View>
-        <View style={{width: '25%', alignItems: 'center', padding: 5}}>
+        <View style={styles.iconView}>
           <Avatar
             icon={{
-              name: 'percent',
-              size: 14,
+              name: 'phone-call',
+              size: 22,
             }}
             rounded
             size={55}
             overlayContainerStyle={{
-              backgroundColor: '#fff',
+              backgroundColor: '#000',
             }}
           />
           <Text style={styles.txtStyle}>Call Logs</Text>
         </View>
-        <View style={{width: '25%', alignItems: 'center', padding: 5}}>
+        <View style={styles.iconView}>
           <Avatar
             icon={{
-              name: 'percent',
-              size: 14,
+              name: 'flag',
+              size: 22,
             }}
             rounded
             size={55}
             overlayContainerStyle={{
-              backgroundColor: '#fff',
+              backgroundColor: '#000',
             }}
           />
           <Text style={styles.txtStyle}>Buy Leads</Text>
         </View>
-        <View style={{width: '25%', alignItems: 'center', padding: 5}}>
+        <View style={styles.iconView}>
           <Avatar
             icon={{
-              name: 'percent',
-              size: 14,
+              name: 'more-horizontal',
+              size: 22,
             }}
             rounded
             size={55}
             overlayContainerStyle={{
-              backgroundColor: '#fff',
+              backgroundColor: '#000',
             }}
           />
           <Text style={styles.txtStyle}>See All</Text>
         </View>
       </View>
       <View
-        style={{display: 'flex', justifyContent: 'space-between', margin: 10}}>
+        style={{ display: 'flex', justifyContent: 'space-between', margin: 10 }}>
         <View
-          style={{display: 'flex', alignItems: 'center', padding: 5}}
+          style={{ display: 'flex', alignItems: 'center', padding: 5 }}
           style={styles.promotionDiv}>
           <View>
             <Text style={styles.textName}>Products</Text>
@@ -177,17 +158,17 @@ function ShowBiz() {
               flexDirection: 'row',
               padding: 10,
             }}>
-            <Avatar
-              icon={{
-                name: 'percent',
-                size: 14,
-              }}
-              rounded
-              size={45}
-              overlayContainerStyle={{
-                backgroundColor: '#fff',
-              }}
-            />
+           <Avatar
+            icon={{
+              name: 'box',
+              size: 22,
+            }}
+            rounded
+            size={55}
+            overlayContainerStyle={{
+              backgroundColor: '#000',
+            }}
+          />
             <Text
               style={{
                 color: 'white',
@@ -200,7 +181,7 @@ function ShowBiz() {
           </View>
         </View>
         <View
-          style={{display: 'flex', justifyContent: 'space-around'}}
+          style={{ display: 'flex', justifyContent: 'space-around' }}
           style={styles.promotionDiv}>
           <View>
             <Text style={styles.textName}>Orders</Text>
@@ -214,13 +195,13 @@ function ShowBiz() {
             }}>
             <Avatar
               icon={{
-                name: 'percent',
-                size: 14,
+                name: 'archive',
+                size: 22,
               }}
               rounded
-              size={45}
+              size={55}
               overlayContainerStyle={{
-                backgroundColor: '#fff',
+                backgroundColor: '#000',
               }}
             />
             <Text
@@ -244,7 +225,7 @@ const styles = StyleSheet.create({
     marginHorizontal: 10,
     marginVertical: 12,
     borderRadius: 8,
-    backgroundColor: '#2d3e50',
+    backgroundColor: green,
     height: 120,
     display: 'flex',
     justifyContent: 'space-around',
@@ -259,10 +240,35 @@ const styles = StyleSheet.create({
   },
   txtStyle: {
     marginTop: 10,
-    borderWidth:1,
-    borderColor:'#000',
-    textAlign:'center'
+    textAlign: 'center'
   },
+  iconView: {
+    width: '25%',
+    alignItems: 'center',
+    padding: 5
+  },
+  avtarView: {
+    margin: 10,
+    display: 'flex',
+    justifyContent: 'space-between',
+    flexDirection: 'row',
+  },
+  headerView : {
+    display: 'flex',
+    justifyContent: 'space-between',
+    marginTop: 10,
+  },
+  headertext : {
+    textAlign: 'center',
+    fontSize: 18,
+    color: '#000',
+    fontWeight: '700',
+  },
+  headerBottom : {
+    textAlign: 'center', 
+    color: '#BDBDBD', 
+    fontSize: 12 
+  }
 });
 
 export default ShowBiz;

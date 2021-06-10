@@ -91,7 +91,8 @@ function commonReducer(state = initState, action = {}) {
     case Actions.SWITCH_MODE:
       return state.set(
         'theme',
-        state.get('theme') === Actions.LIGHT ? Actions.DARK : Actions.LIGHT,
+        console.log(state.get('theme')),
+        state.get('theme') === Actions.LIGHT ? Actions.LIGHT : Actions.LIGHT,
       );
     case Actions.FETCH_SETTING_SUCCESS:
       const defaultCurrency = payload.settings.currency;
