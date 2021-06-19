@@ -38,10 +38,8 @@ class Sidebar extends React.Component {
       {
         id: '2',
         name: 'Become a Seller',
-        router: mainStack.home_tab,
-        params: {
-          screen: homeTabs.home_drawer,
-        },
+        router: mainStack.become_a_seller,
+      
       },
      
       {
@@ -72,6 +70,16 @@ class Sidebar extends React.Component {
         id: '7',
         name: 'common:show_biz',
         router: mainStack.show_biz,
+      },
+      {
+        id: '8',
+        name: 'common:qr_code',
+        router: mainStack.qr_code,
+      },
+      {
+        id: '9',
+        name: 'common:wallet',
+        router: mainStack.wallet,
       },
     ];
 

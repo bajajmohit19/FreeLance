@@ -20,7 +20,9 @@ export const homeTabs = {
 
 export const mainStack = {
   home_tab: 'HomeTab',
-
+  become_a_seller:'Seller',
+  qr_code:'QRCode',
+  wallet:'Wallet',
   blogs: 'BlogsScreen',
   blog: 'BlogScreen',
 

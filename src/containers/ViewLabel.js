@@ -45,10 +45,11 @@ class ViewLabel extends React.Component {
         inputRange: [0, 1],
         outputRange: [lineHeights.base, 15],
       }),
-      color: this._animatedIsFocused.interpolate({
-        inputRange: [0, 1],
-        outputRange: [colorComponent.color, colorComponent.colorHeading],
-      }),
+      // color: this._animatedIsFocused.interpolate({
+      //   inputRange: [0, 1],
+      //   outputRange: [colorComponent.color, colorComponent.colorHeading],
+      // }),
+      color:'#000',
       zIndex: this._animatedIsFocused.interpolate({
         inputRange: [0, 1],
         outputRange: [0, 9999],

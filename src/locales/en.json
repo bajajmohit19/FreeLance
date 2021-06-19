@@ -27,6 +27,8 @@
     "text_help_info": "Help & Info",
     "text_contact": "Contact Us",
     "show_biz": "Sell on Shop",
+    "qr_code":"QR Code",
+    "wallet":"Wallet",
     "text_privacy": "Privacy",
     "text_demo_config": "Test Your Store",
     "text_privacy_full": "Privacy policies",
@@ -295,6 +297,8 @@
   },
   "inputs": {
     "text_first_name": "First Name",
+    "shop_name":"Shop Name",
+    "address":"Address",
     "text_last_name": "Last Name",
     "text_company": "Company name (optional)",
     "text_country": "Country",

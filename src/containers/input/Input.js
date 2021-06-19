@@ -1,10 +1,10 @@
 import React from 'react';
-import {StyleSheet, View} from 'react-native';
-import {Icon, withTheme} from 'src/components';
+import { StyleSheet, View } from 'react-native';
+import { Icon, withTheme } from 'src/components';
 import InputBasic from './InputBasic';
-import ViewLabel, {MIN_HEIGHT} from '../ViewLabel';
-import {grey4} from 'src/components/config/colors';
-import {padding, margin} from 'src/components/config/spacing';
+import ViewLabel, { MIN_HEIGHT } from '../ViewLabel';
+import { grey4 } from 'src/components/config/colors';
+import { padding, margin } from 'src/components/config/spacing';
 
 class Input extends React.Component {
   constructor(props) {
@@ -46,7 +46,7 @@ class Input extends React.Component {
     );
   };
   handleBlur = (data) => {
-    const {value} = this.props;
+    const { value } = this.props;
     this.updateHeading(
       value || (this.input.current && this.input.current._lastNativeText),
     );
@@ -65,11 +65,12 @@ class Input extends React.Component {
       multiline,
       ...rest
     } = this.props;
-    const {isSecure, isHeading} = this.state;
+    const { isSecure, isHeading } = this.state;
     return (
       <ViewLabel label={label} error={error} isHeading={isHeading}>
         <View style={styles.viewInput}>
           <InputBasic
+            placeholderTextColor={"#000"}
             {...rest}
             inputRef={this.input}
             testID="RN-text-input"

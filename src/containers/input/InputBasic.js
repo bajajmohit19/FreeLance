@@ -13,20 +13,21 @@ const InputBasic = ({
   ...rest
 }) => {
   return (
-    <ThemeConsumer>
-      {({theme}) => (
+    // <ThemeConsumer>
+      // {({theme}) => (
+        // console.log("Theme", theme.colors.black, placeholderTextColor),
         <TextInput
           {...rest}
           ref={inputRef}
           placeholderTextColor={
-            placeholderTextColor ? placeholderTextColor : theme.ViewLabel.color
+            "#000"
           }
           multiline={multiline}
           numberOfLines={multiline ? numberOfLines : 1}
           style={[
             styles.input,
             {
-              color: theme.colors.primary,
+              color: '#000'
             },
             multiline && styles.inputMultiline,
             multiline && {
@@ -35,8 +36,8 @@ const InputBasic = ({
             style && style,
           ]}
         />
-      )}
-    </ThemeConsumer>
+      // )}
+    // </ThemeConsumer>
   );
 };
 

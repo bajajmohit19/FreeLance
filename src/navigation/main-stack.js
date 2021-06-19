@@ -37,6 +37,7 @@ import SettingScreen from 'src/screens/profile/setting';
 import HelpScreen from 'src/screens/profile/help';
 import ContactScreen from 'src/screens/profile/contact';
 import ShowBizz from '../screens/show-biz'
+import BecomeSeller from 'src/screens/seller'
 import AccountScreen from 'src/screens/profile/account';
 import ChangePasswordScreen from 'src/screens/profile/change-password';
 import AddressBookScreen from 'src/screens/profile/address-book';
@@ -46,6 +47,8 @@ import DemoConfig from 'src/screens/profile/demo-config';
 import EditAccount from 'src/screens/profile/edit-account';
 import Downloads from 'src/screens/profile/downloads';
 import Page from 'src/screens/profile/Page';
+import QRCode from 'src/screens/qrcode'
+import Wallet from 'src/screens/wallet'
 
 const Stack = createStackNavigator();
 
@@ -183,6 +186,21 @@ function MainStack() {
         options={{headerShown: true}}
         name={mainStack.show_biz}
         component={ShowBizz}
+      />
+       <Stack.Screen
+        options={{headerShown: false}}
+        name={mainStack.become_a_seller}
+        component={BecomeSeller}
+      />
+       <Stack.Screen
+        options={{headerShown: false}}
+        name={mainStack.qr_code}
+        component={QRCode}
+      />
+        <Stack.Screen
+        options={{headerShown: false}}
+        name={mainStack.wallet}
+        component={Wallet}
       />
       <Stack.Screen
         options={{headerShown: false}}
