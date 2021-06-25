@@ -13,6 +13,12 @@ export function signInWithEmail({username, password}) {
     password,
   };
 }
+export function becomeASeller(data) {
+  return {
+    type: Actions.BECOME_A_SELLER,
+    payload : data
+  };
+}
 
 /**
  * Action login mobile
@@ -93,6 +99,11 @@ export function signInWithFacebookCancel() {
 export function isLogin() {
   return {
     type: Actions.IS_LOGIN,
+  };
+}
+export function getSellerDetails() {
+  return {
+    type: Actions.GET_SELLER_DETAILS,
   };
 }
 

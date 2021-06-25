@@ -1,32 +1,32 @@
 import React from 'react';
-import {connect} from 'react-redux';
-import {useTranslation} from 'react-i18next';
-import {useNavigation} from '@react-navigation/native';
+import { connect } from 'react-redux';
+import { useTranslation } from 'react-i18next';
+import { useNavigation } from '@react-navigation/native';
 
 import truncate from 'lodash/truncate';
 import isEqual from 'lodash/isEqual';
 
-import {StyleSheet} from 'react-native';
-import {Text, ListItem} from 'src/components';
+import { StyleSheet } from 'react-native';
+import { Text, ListItem } from 'src/components';
 import Button from 'src/containers/Button';
 import Separator from 'src/containers/Separator';
-import {Row} from 'src/containers/Gird';
+import { Row } from 'src/containers/Gird';
 
-import {authSelector} from 'src/modules/auth/selectors';
+import { authSelector } from 'src/modules/auth/selectors';
 
-import {mainStack, rootSwitch, authStack} from 'src/config/navigator';
-import {margin, padding} from 'src/components/config/spacing';
+import { mainStack, rootSwitch, authStack } from 'src/config/navigator';
+import { margin, padding } from 'src/components/config/spacing';
 
 const HeaderMe = (props) => {
   const {
-    auth: {isLogin, user},
+    auth: { isLogin, user },
   } = props;
-  const {t} = useTranslation();
+  const { t } = useTranslation();
   const navigation = useNavigation();
 
   let nameUser = t('profile:text_hello_default');
   if (isLogin && user && !isEqual(user, {})) {
-    const stringName = t('profile:text_hello', {name: user.display_name});
+    const stringName = t('profile:text_hello', { name: user.first_name });
 
     nameUser = truncate(stringName, {
       length: 20,
@@ -45,7 +45,7 @@ const HeaderMe = (props) => {
             containerStyle={styles.flex}
             type="outline"
             onPress={() =>
-              navigation.navigate(rootSwitch.auth, {screen: authStack.register})
+              navigation.navigate(rootSwitch.auth, { screen: authStack.register })
             }
           />
           <Separator small />
@@ -53,7 +53,7 @@ const HeaderMe = (props) => {
             title={t('profile:text_signin')}
             containerStyle={styles.flex}
             onPress={() =>
-              navigation.navigate(rootSwitch.auth, {screen: authStack.login})
+              navigation.navigate(rootSwitch.auth, { screen: authStack.login })
             }
           />
         </Row>
@@ -65,7 +65,7 @@ const HeaderMe = (props) => {
       title={nameUser}
       leftAvatar={{
         source: user.avatar
-          ? {uri: user.avatar}
+          ? { uri: user.avatar }
           : require('src/assets/images/pDefault.png'),
         size: 60,
         rounded: true,

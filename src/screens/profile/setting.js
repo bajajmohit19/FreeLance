@@ -12,7 +12,7 @@ import ConfigAdvanced from './containers/Advanced';
 
 import {themeSelector} from 'src/modules/common/selectors';
 import {switchMode} from 'src/modules/common/actions';
-import {DARK} from 'src/modules/common/constants';
+import {DARK, LIGHT} from 'src/modules/common/constants';
 import {mainStack} from 'src/config/navigator';
 
 import {ENABLE_CONFIG_DEMO} from 'src/config/development';
@@ -20,6 +20,7 @@ import {ENABLE_CONFIG_DEMO} from 'src/config/development';
 class SettingScreen extends React.Component {
   render() {
     const {t, theme, navigation} = this.props;
+    console.log("theme", theme)
     const titleProps = {
       medium: true,
     };
@@ -40,7 +41,7 @@ class SettingScreen extends React.Component {
             titleProps={titleProps}
             rightElement={
               <Switch
-                value={theme === DARK}
+                value={LIGHT}
                 onValueChange={this.props.switchMode}
               />
             }

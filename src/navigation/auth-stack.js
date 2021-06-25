@@ -6,7 +6,7 @@ import {createStackNavigator} from '@react-navigation/stack';
 
 import Login from 'src/screens/auth/login';
 import LoginMobile from 'src/screens/auth/login-mobile';
-import Register from 'src/screens/auth/register';
+import Register from 'src/screens/auth/Register/register';
 import Forgot from 'src/screens/auth/forgot';
 
 const Stack = createStackNavigator();

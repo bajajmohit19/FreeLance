@@ -1,4 +1,4 @@
-import {combineReducers} from 'redux';
+import { combineReducers } from 'redux';
 
 import authReducer from './modules/auth/reducer';
 import categoryReducer from './modules/category/reducer';

@@ -5,8 +5,13 @@ import {shippingAddressInit} from './config';
 export const auth = (state) => state.auth;
 export const authSelector = createSelector(auth, (data) => data.toJS());
 
+export const sellerDataSelector = createSelector(auth, (data) => data.get('sellerData'))
+
 export const isLoginSelector = createSelector(auth, (data) =>
   data.get('isLogin'),
+);
+export const isSellerSelector = createSelector(auth, (data) =>
+  data.get('isSeller'),
 );
 
 /**

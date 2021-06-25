@@ -1,17 +1,17 @@
 import firebase from '@react-native-firebase/app';
-import {GoogleSignin} from '@react-native-community/google-signin';
-import {LoginManager} from 'react-native-fbsdk';
+import { GoogleSignin } from '@react-native-community/google-signin';
+import { LoginManager } from 'react-native-fbsdk';
 import AsyncStorage from '@react-native-community/async-storage';
-import {put, call, select, takeEvery} from 'redux-saga/effects';
-import {showMessage} from 'react-native-flash-message';
-import {handleError} from 'src/utils/error';
+import { put, call, select, takeEvery } from 'redux-saga/effects';
+import { showMessage } from 'react-native-flash-message';
+import { handleError } from 'src/utils/error';
 import OneSignal from 'react-native-onesignal';
 
 import languages from 'src/locales';
 
 import * as Actions from './constants';
 
-import {userIdSelector} from './selectors';
+import { userIdSelector } from './selectors';
 import {
   loginWithEmail,
   loginWithMobile,
@@ -30,19 +30,21 @@ import {
   digitsLogoutUser,
   isLogin,
   logout,
+  becomeASeller,
+  getSellerData
 } from './service';
 
-import {validatorForgotPassword, validatorChangePassword} from './validator';
+import { validatorForgotPassword, validatorChangePassword } from './validator';
 
 import appleAuth, {
   AppleAuthRequestOperation,
 } from '@invertase/react-native-apple-authentication';
 
-import {languageSelector, requiredLoginSelector} from '../common/selectors';
+import { languageSelector, requiredLoginSelector } from '../common/selectors';
 
 import NavigationService from 'src/utils/navigation';
-import {rootSwitch} from 'src/config/navigator';
-import {shippingAddressInit} from './config';
+import { rootSwitch } from 'src/config/navigator';
+import { shippingAddressInit } from './config';
 
 async function signOut() {
 
@@ -89,7 +91,7 @@ async function signOut() {
 function* doLoginSuccess(token, user = {}, method = 'email') {
   yield put({
     type: Actions.SIGN_IN_WITH_EMAIL_SUCCESS,
-    payload: {token, user},
+    payload: { token, user },
   });
   yield put({
     type: Actions.GET_CUSTOMER,
@@ -103,6 +105,22 @@ function* doLoginSuccess(token, user = {}, method = 'email') {
 
   OneSignal.sendTag('user_id', user.ID);
 }
+/**
+ * Do makeaseller success
+ * @param token
+ * @param user
+ * @returns {IterableIterator<*>}
+ */
+function* doMakeASellerSuccess(isSeller) {
+  yield put({
+    type: Actions.BECOME_A_SELLER_SUCCESS,
+    payload: { isSeller },
+  });
+
+  yield call(NavigationService.navigate, rootSwitch.main);
+  yield call(AsyncStorage.setItem, 'isLogin', isSeller);
+
+}
 
 /**
  * Sign In saga
@@ -110,17 +128,36 @@ function* doLoginSuccess(token, user = {}, method = 'email') {
  * @param password
  * @returns {IterableIterator<*>}
  */
-function* signInWithEmailSaga({username, password}) {
+function* signInWithEmailSaga({ username, password }) {
   try {
+    console.log(username, password)
     const language = yield select(languageSelector);
-    const {token, user} = yield call(loginWithEmail, {
+    const { data, err, message, status } = yield call(loginWithEmail, {
       username,
       password,
       language,
     });
-    yield call(doLoginSuccess, token, user, 'email');
+    if (status === 409 || status === 422 || status === 500) {
+      yield call(showMessage, {
+        message: message,
+        type: 'info',
+      });
+      yield put({
+        type: Actions.SIGN_IN_WITH_EMAIL_ERROR,
+        payload: {
+          message: message,
+        },
+      });
+    } else {
+      yield call(showMessage, {
+        message: message,
+        type: 'success',
+      });
+      yield call(doLoginSuccess, data?.access_token, data, 'email');
+
+    }
   } catch (e) {
-    // yield call(handleError, e)
+    yield call(handleError, e)
     yield put({
       type: Actions.SIGN_IN_WITH_EMAIL_ERROR,
       payload: {
@@ -129,18 +166,70 @@ function* signInWithEmailSaga({username, password}) {
     });
   }
 }
+/**
+ * Become A Seller
+ * @param data
+ * @returns {Generator<<"PUT", PutEffectDescriptor<{payload: {message: *}, type: string}>>|<"CALL", CallEffectDescriptor>, void, ?>}
+ */
+function* becomeSeller({ payload }) {
+  try {
+    ;
+    const signupData = yield call(becomeASeller, payload);
 
+    if (signupData?.status === 409 || signupData?.status === 422 || signupData?.status === 500) {
+      yield call(showMessage, {
+        message: signupData?.message,
+        type: 'info',
+      });
+    }
+    else {
+      yield call(showMessage, {
+        message: signupData?.message,
+        type: 'success',
+      });
+      yield call(AsyncStorage.setItem, 'isSeller', signupData?.data?.user_type);
+
+    }
+
+  } catch (e) {
+    yield call(handleError, e);
+    yield put({
+      type: Actions.SIGN_UP_WITH_EMAIL_ERROR,
+      payload: {
+        message: e.message,
+      },
+    });
+  }
+}
+function* getSellerDataSaga({ payload }) {
+  try {
+    const seller = yield call(getSellerData);
+    yield put({
+      type: Actions.GET_SELLER_DETAILS_SUCCESS,
+      payload: seller?.data
+        
+    });
+    if (cb) {
+      yield call(cb, seller);
+    }
+  } catch (e) {
+    console.log("error", e)
+    // yield put({
+    //   type: Actions.GET_CUSTOMER_ERROR,
+    // });
+  }
+}
 /**
  * Sign In With OTP
  * @param data
  * @returns {Generator<<"PUT", PutEffectDescriptor<{payload: {message: *}, type: string}>>|<"CALL", CallEffectDescriptor>, void, ?>}
  */
-function* signInWithOtpSaga({payload}) {
+function* signInWithOtpSaga({ payload }) {
   try {
     // const language = yield select(languageSelector);
-    const {success, data} = yield call(digitsLoginUser, payload.data);
+    const { success, data } = yield call(digitsLoginUser, payload.data);
     if (success) {
-      const {token, user} = data;
+      const { token, user } = data;
       yield call(doLoginSuccess, token, user, 'otp-digits');
     } else {
       yield call(handleError, new Error('Something wrong.'));
@@ -161,12 +250,12 @@ function* signInWithOtpSaga({payload}) {
  * @param payload
  * @returns {IterableIterator<*>}
  */
-function* signUpWithOtplSaga({payload}) {
+function* signUpWithOtplSaga({ payload }) {
   try {
     const language = yield select(languageSelector);
-    const {success, data} = yield call(digitsCreateUser, payload.data);
+    const { success, data } = yield call(digitsCreateUser, payload.data);
     if (success) {
-      const {token, user} = data;
+      const { token, user } = data;
       yield call(showMessage, {
         message: languages[language].notifications.text_create_user_success,
         type: 'info',
@@ -176,7 +265,6 @@ function* signUpWithOtplSaga({payload}) {
       yield call(handleError, new Error('Something wrong.'));
     }
   } catch (e) {
-    console.log(e);
     yield call(handleError, e);
     yield put({
       type: Actions.SIGN_UP_WITH_EMAIL_ERROR,
@@ -192,9 +280,9 @@ function* signUpWithOtplSaga({payload}) {
  * @param tokenId
  * @returns {IterableIterator<*>}
  */
-function* signInWithMobileSaga({tokenId}) {
+function* signInWithMobileSaga({ tokenId }) {
   try {
-    const {token, user} = yield call(loginWithMobile, tokenId);
+    const { token, user } = yield call(loginWithMobile, tokenId);
     yield call(doLoginSuccess, token, user, 'otp');
   } catch (e) {
     yield call(handleError, e);
@@ -209,16 +297,26 @@ function* signInWithMobileSaga({tokenId}) {
  * @param payload
  * @returns {IterableIterator<*>}
  */
-function* signUpWithEmailSaga({payload}) {
+function* signUpWithEmailSaga({ payload }) {
   try {
-    const {data} = payload;
+    const { data } = payload;
     const language = yield select(languageSelector);
-    const {token, user} = yield call(registerWithEmail, data);
-    yield call(showMessage, {
-      message: languages[language].notifications.text_create_user_success,
-      type: 'info',
-    });
-    yield call(doLoginSuccess, token, user, 'otp');
+    const signupData = yield call(registerWithEmail, data);
+
+    if (signupData?.status === 409 || signupData?.status === 422 || signupData?.status === 500) {
+      yield call(showMessage, {
+        message: signupData?.message,
+        type: 'info',
+      });
+    }
+    else {
+      yield call(showMessage, {
+        message: signupData?.message,
+        type: 'success',
+      });
+      yield call(doLoginSuccess, signupData?.data?.access_token, signupData?.data, 'otp');
+
+    }
   } catch (e) {
     yield call(handleError, e);
     yield put({
@@ -235,10 +333,10 @@ function* signUpWithEmailSaga({payload}) {
  * @param payload
  * @returns {IterableIterator<CallEffect | *>}
  */
-function* signInWithGoogleSaga({payload}) {
+function* signInWithGoogleSaga({ payload }) {
   try {
-    const {idToken} = payload;
-    const {token, user} = yield call(loginWithGoogle, {idToken});
+    const { idToken } = payload;
+    const { token, user } = yield call(loginWithGoogle, { idToken });
     yield call(doLoginSuccess, token, user, 'google');
   } catch (e) {
     yield call(handleError, e);
@@ -253,10 +351,10 @@ function* signInWithGoogleSaga({payload}) {
  * @param payload
  * @returns {IterableIterator<CallEffect | *>}
  */
-function* signInWithFacebookSaga({payload}) {
+function* signInWithFacebookSaga({ payload }) {
   try {
-    const {data} = payload;
-    const {token, user} = yield call(loginWithFacebook, data);
+    const { data } = payload;
+    const { token, user } = yield call(loginWithFacebook, data);
     yield call(doLoginSuccess, token, user, 'facebook');
   } catch (e) {
     yield call(handleError, e);
@@ -271,9 +369,9 @@ function* signInWithFacebookSaga({payload}) {
  * @param payload
  * @returns {IterableIterator<CallEffect | *>}
  */
-function* signInWithAppleSaga({payload}) {
+function* signInWithAppleSaga({ payload }) {
   try {
-    const {token, user} = yield call(loginWithApple, payload);
+    const { token, user } = yield call(loginWithApple, payload);
     yield call(doLoginSuccess, token, user, 'apple');
   } catch (e) {
     yield call(handleError, e);
@@ -321,7 +419,7 @@ function* checkAuthSideEffectSaga() {
     if (!user || !user.ID) {
       yield call(signOut);
       yield call(AsyncStorage.removeItem, 'token');
-      yield put({type: Actions.SIGN_OUT_SUCCESS});
+      yield put({ type: Actions.SIGN_OUT_SUCCESS });
       console.log('checkAuthSideEffect', 'token not validate!');
     } else {
       console.log('Token validate ok!');
@@ -336,13 +434,13 @@ function* checkAuthSideEffectSaga() {
  * @param payload
  * @returns {IterableIterator<*>}
  */
-function* changeEmailSaga({payload}) {
+function* changeEmailSaga({ payload }) {
   try {
     yield call(changeEmail, payload);
-    yield put({type: Actions.CHANGE_EMAIL_SUCCESS});
+    yield put({ type: Actions.CHANGE_EMAIL_SUCCESS });
   } catch (e) {
     yield call(handleError, e);
-    yield put({type: Actions.CHANGE_EMAIL_ERROR});
+    yield put({ type: Actions.CHANGE_EMAIL_ERROR });
   }
 }
 
@@ -351,7 +449,7 @@ function* changeEmailSaga({payload}) {
  * @param payload
  * @returns {IterableIterator<*>}
  */
-function* changePasswordSaga({payload}) {
+function* changePasswordSaga({ payload }) {
   try {
     const language = yield select(languageSelector);
     const errors = validatorChangePassword(payload, language);
@@ -398,7 +496,7 @@ function* signOutSaga() {
     if (requiredLogin) {
       yield call(NavigationService.navigate, rootSwitch.auth);
     }
-    yield put({type: Actions.SIGN_OUT_SUCCESS});
+    yield put({ type: Actions.SIGN_OUT_SUCCESS });
     yield call(signOut);
   } catch (e) {
     console.log(e);
@@ -410,9 +508,9 @@ function* signOutSaga() {
  * Get customer
  * @returns {IterableIterator<*>}
  */
-function* getCustomerSaga({payload}) {
+function* getCustomerSaga({ payload }) {
   try {
-    const {id, cb} = payload;
+    const { id, cb } = payload;
     const customer = yield call(getCustomer, id);
     yield put({
       type: Actions.GET_CUSTOMER_SUCCESS,
@@ -435,11 +533,11 @@ function* getCustomerSaga({payload}) {
  * Update customer
  * @returns {IterableIterator<*>}
  */
-function* updateCustomerSaga({payload}) {
+function* updateCustomerSaga({ payload }) {
   try {
-    const {data, cb} = payload;
-    const userID = yield select(userIdSelector);
-    yield call(updateCustomer, userID, data);
+    const { data, cb } = payload;
+    // const userID = yield select(userIdSelector);
+    yield call(updateCustomer, data);
     yield put({
       type: Actions.UPDATE_CUSTOMER_SUCCESS,
     });
@@ -463,7 +561,7 @@ function* updateCustomerSaga({payload}) {
  * get list file of customer
  * @returns {IterableIterator<*>}
  */
-function* getFilesDownloadCustomer({payload}) {
+function* getFilesDownloadCustomer({ payload }) {
   try {
     const userID = yield select(userIdSelector);
     const files = yield call(getFilesDownload, userID);
@@ -489,6 +587,8 @@ function* getFilesDownloadCustomer({payload}) {
 }
 
 export default function* authSaga() {
+  yield takeEvery(Actions.BECOME_A_SELLER, becomeSeller)
+  yield takeEvery(Actions.GET_SELLER_DETAILS, getSellerDataSaga)
   yield takeEvery(Actions.SIGN_IN_WITH_EMAIL, signInWithEmailSaga);
   yield takeEvery(Actions.SIGN_IN_WITH_MOBILE, signInWithMobileSaga);
   yield takeEvery(Actions.SIGN_UP_WITH_EMAIL, signUpWithEmailSaga);

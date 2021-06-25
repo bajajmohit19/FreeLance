@@ -297,6 +297,7 @@
   },
   "inputs": {
     "text_first_name": "First Name",
+    "text_username": "Username",
     "shop_name":"Shop Name",
     "address":"Address",
     "text_last_name": "Last Name",

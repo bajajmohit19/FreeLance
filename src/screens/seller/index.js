@@ -1,7 +1,8 @@
-import React, { useState } from 'react'
-import { View, Text, KeyboardAvoidingView, ScrollView, StyleSheet } from 'react-native'
-import { ThemedView, Header } from '../../components'
+import React, { useState, useEffect } from 'react'
+import { View, Text, KeyboardAvoidingView, ScrollView, StyleSheet, AsyncStorage } from 'react-native'
+import { ThemedView, Header } from 'src/components'
 import { TextHeader, IconHeader } from 'src/containers/HeaderComponent';
+import { useDispatch, useSelector } from 'react-redux'
 import Container from 'src/containers/Container';
 import Input from 'src/containers/input/Input';
 import Button from 'src/containers/Button';
@@ -9,20 +10,54 @@ import { margin } from 'src/components/config/spacing';
 import { INITIAL_COUNTRY } from 'src/config/config-input-phone-number';
 import InputMobile from 'src/containers/input/InputMobile';
 import { Image, Icon } from 'src/components';
-
+import { sellerDataSelector } from 'src/modules/auth/selectors'
+import { becomeASeller, getSellerDetails } from 'src/modules/auth/actions'
 function Seller({ t }) {
-    const [state, setState] = useState({
-        first_name: '',
-        business_contact: '',
-        address: '',
-        shop_name: '',
-        errors: null
+    const { sellerData } = useSelector((state) => ({
+        sellerData: sellerDataSelector(state)
 
     })
+    )
+
+    console.log("asdasudasfefwedwasdas", sellerData)
+    const dispatch = useDispatch()
+    const [sellerState, setState] = useState({
+        first_name: '',
+        business_contact: '',
+        address1: '',
+        address2: '',
+        shop_name: '',
+        postcode: '',
+        city: '',
+        state: '',
+        description: '',
+        // errors: null
+
+    })
+    const handleSaveCustomer = () => {
+        dispatch(becomeASeller(sellerState));
+    }
+    const getSellerDetails1 = () => {
+        dispatch(getSellerDetails());
+    }
     const uploadProfilePic = () => {
         console.log("Upload Image")
     }
-    const { first_name, address, shop_name, business_contact } = state
+    useEffect(() => {
+        AsyncStorage.getItem('isSeller').then((d) => {
+            if (d == 'SELLER') {
+                getSellerDetails1()
+            }
+        }).catch(e => {
+            console.log("Not Seller", e)
+
+        })
+
+    }, [])
+    useEffect(() => {
+        setState((prev) => ({ ...prev, first_name:sellerData?.seller_name, shop_name:sellerData?.shop_name, address1:sellerData?.addressEnc?.address1,address2:sellerData?.addressEnc?.address2, postcode:sellerData?.addressEnc?.postcode, city:sellerData?.addressEnc?.city, state: sellerData?.addressEnc?.state  }))
+    }, [sellerData])
+    const { first_name, address1, shop_name, business_contact, address2, city, postcode, description, state } = sellerState
     return (
         <ThemedView isFullView>
             <Header
@@ -37,28 +72,57 @@ function Seller({ t }) {
                         <Input
                             label={'First Name'}
                             value={first_name}
-                            onChangeText={(value) => setState((prev) => ({ ...prev, value }))}
+                            onChangeText={(value) => setState((prev) => ({ ...prev, first_name: value }))}
                         // error={errors && errors.first_name}
                         />
                         <Input
                             label={'Shop Name'}
                             value={shop_name}
-                            onChangeText={(value) => setState((prev) => ({ ...prev, value }))}
+                            onChangeText={(value) => setState((prev) => ({ ...prev, shop_name: value }))}
 
                         // error={errors && errors.shop_name}
                         />
                         <Input
-                            label={'Address'}
-                            value={address}
-                            onChangeText={(value) => setState((prev) => ({ ...prev, value }))}
+                            label={'Address1'}
+                            value={address1}
+                            onChangeText={(value) => setState((prev) => ({ ...prev, address1: value }))}
+
+                        // error={errors && errors.email}
+                        />
+                        <Input
+                            label={'Address2'}
+                            value={address2}
+                            onChangeText={(value) => setState((prev) => ({ ...prev, address2: value }))}
+
+                        // error={errors && errors.email}
+                        />
+                        <Input
+                            label={'City'}
+                            value={city}
+                            onChangeText={(value) => setState((prev) => ({ ...prev, city: value }))}
+
+                        // error={errors && errors.email}
+                        />
+                        <Input
+                            label={'State'}
+                            value={state}
+                            onChangeText={(value) => setState((prev) => ({ ...prev, state: value }))}
+
+                        // error={errors && errors.email}
+                        />
+                        <Input
+                            label={'Postal Code'}
+                            value={postcode}
+                            onChangeText={(value) => setState((prev) => ({ ...prev, postcode: value }))}
 
                             // error={errors && errors.email}
-                            keyboardType="email-address"
+                            keyboardType="number-pad"
                         />
+
                         <InputMobile
                             value={business_contact}
                             initialCountry={INITIAL_COUNTRY}
-                            onChangeText={(value) => setState((prev) => ({ ...prev, value }))}
+                            onChangeText={(value) => setState((prev) => ({ ...prev, business_contact: value }))}
 
                         // onChangePhoneNumber={({ value, code, isoCode }) =>
                         //     this.changeData({
@@ -68,6 +132,14 @@ function Seller({ t }) {
                         //     })
                         // }
                         // error={errors && errors.phone_number}
+                        />
+                        <Input
+                            label={'Description'}
+                            value={description}
+                            onChangeText={(value) => setState((prev) => ({ ...prev, description: value }))}
+
+                            // error={errors && errors.email}
+                            keyboardType="email-address"
                         />
                         <View style={styles.uploadView}>
                             <Icon
@@ -86,10 +158,10 @@ function Seller({ t }) {
                 </ScrollView>
                 <Container>
                     <Button
-                        title={'Save'}
+                        title={sellerData !== null ? 'Update' :  'Save'}
                         containerStyle={styles.button}
-                    // loading={pendingUpdateCustomer}
-                    // onPress={this.handleSaveCustomer}
+                        // loading={pendingUpdateCustomer}
+                        onPress={handleSaveCustomer}
                     />
                 </Container>
 
@@ -108,11 +180,11 @@ const styles = StyleSheet.create({
     button: {
         marginVertical: margin.big,
     },
-    uploadView : {
+    uploadView: {
         alignItems: 'flex-start', flex: 1, flexDirection: 'row',
         marginTop: 5
     },
-    uploadImage : { 
+    uploadImage: {
         marginLeft: 10, marginTop: 10
     }
 });

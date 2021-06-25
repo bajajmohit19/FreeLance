@@ -29,8 +29,9 @@ class EditAccount extends React.Component {
       data: {
         first_name: user.first_name || '',
         last_name: user.last_name || '',
-        email: user.user_email || '',
-        phone_number: '+919999999999',
+        email: user.email || '',
+        phone: user.phone,
+        username: user.username,
         country_no: '',
       },
       errors: null,
@@ -83,7 +84,7 @@ class EditAccount extends React.Component {
       auth: {pendingUpdateCustomer},
     } = this.props;
     const {data, errors} = this.state;
-    const {first_name, last_name, email, phone_number, country_code} = data;
+    const {first_name, last_name, email, phone, country_code, username} = data;
 
     return (
       <ThemedView isFullView>
@@ -115,41 +116,26 @@ class EditAccount extends React.Component {
                 error={errors && errors.email}
                 keyboardType="email-address"
               />
+               <Input
+                label={t('inputs:text_username')}
+                value={username}
+                onChangeText={(value) => this.changeData('username', value)}
+                error={errors && errors.username}
+                keyboardType="email-address"
+              />
               <InputMobile
-                value={phone_number}
+                value={phone}
                 initialCountry={INITIAL_COUNTRY}
                 onChangePhoneNumber={({value, code, isoCode}) =>
                   this.changeData({
-                    phone_number: value,
+                    phone: value,
                     country_no: code,
                     country_code: isoCode,
                   })
                 }
-                error={errors && errors.phone_number}
+                error={errors && errors.phone}
               />
-              <Input
-                label={'Country'}
-                onChangeText={(value) => this.changeData('email', value)}
-                error={errors && errors.email}
-              />
-              <Input
-                label={'Street Address'}
-                onChangeText={(value) => this.changeData('email', value)}
-                error={errors && errors.email}
-                keyboardType="email-address"
-              />
-              <Input
-                label={'City'}
-                onChangeText={(value) => this.changeData('email', value)}
-                error={errors && errors.email}
-                keyboardType="email-address"
-              />
-              <Input
-                label={'postcode'}
-                onChangeText={(value) => this.changeData('email', value)}
-                error={errors && errors.email}
-                keyboardType="email-address"
-              />
+             
               <Button
                 title={t('common:text_save')}
                 containerStyle={styles.button}

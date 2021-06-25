@@ -1,9 +1,9 @@
-import {fromJS} from 'immutable';
+import { fromJS } from 'immutable';
 
-import {REHYDRATE} from 'redux-persist/lib/constants';
+import { REHYDRATE } from 'redux-persist/lib/constants';
 import * as Actions from './constants';
-import {notificationMessage} from 'src/utils/error';
-import {shippingAddressInit, billingAddressInit, errorInit as initError} from './config';
+import { notificationMessage } from 'src/utils/error';
+import { shippingAddressInit, billingAddressInit, errorInit as initError } from './config';
 
 const initState = fromJS({
   isLogin: false,
@@ -52,6 +52,9 @@ export default function authReducer(state = initState, action = {}) {
         .set('pendingFacebook', false)
         .set('pendingFacebook', false)
         .set('pendingApple', false);
+    case Actions.BECOME_A_SELLER_SUCCESS:
+      return state
+        .set('isSeller', true)
     case Actions.SIGN_IN_WITH_EMAIL_ERROR:
       const errorSignIn = notificationMessage(action.payload);
       return state.set('pending', false).set('loginError', fromJS(errorSignIn));
@@ -128,6 +131,9 @@ export default function authReducer(state = initState, action = {}) {
         .set('pendingGetCustomer', false)
         .set('shippingAddress', fromJS(action?.payload?.shippingAddress))
         .set('billingAddress', fromJS(action?.payload?.billingAddress));
+    case Actions.GET_SELLER_DETAILS_SUCCESS:
+      return state
+        .set('sellerData', action?.payload);
     case Actions.GET_CUSTOMER_ERROR:
       return state.set('pendingGetCustomer', false);
     case Actions.UPDATE_CUSTOMER:
@@ -148,7 +154,7 @@ export default function authReducer(state = initState, action = {}) {
     case REHYDRATE:
       if (action.payload && action.payload.auth) {
         // Restore only user and isLogin state
-        const {auth} = action.payload;
+        const { auth } = action.payload;
         return initState.merge(
           fromJS({
             user: auth.get('user'),

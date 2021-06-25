@@ -1,7 +1,7 @@
 import React from 'react';
-import {connect} from 'react-redux';
-import {withTranslation} from 'react-i18next';
-import {StyleSheet, ScrollView, View, KeyboardAvoidingView} from 'react-native';
+import { connect } from 'react-redux';
+import { withTranslation } from 'react-i18next';
+import { StyleSheet, ScrollView, View, KeyboardAvoidingView } from 'react-native';
 import {
   Header,
   Divider,
@@ -13,17 +13,17 @@ import {
 import Container from 'src/containers/Container';
 import Input from 'src/containers/input/Input';
 import TextHtml from 'src/containers/TextHtml';
-import {TextHeader, IconHeader} from 'src/containers/HeaderComponent';
+import { TextHeader, IconHeader } from 'src/containers/HeaderComponent';
 import SocialMethods from './containers/SocialMethods';
 
-import {rootSwitch, authStack} from 'src/config/navigator';
+import { rootSwitch, authStack } from 'src/config/navigator';
 
-import {signInWithEmail} from 'src/modules/auth/actions';
-import {authSelector} from 'src/modules/auth/selectors';
-import {requiredLoginSelector} from 'src/modules/common/selectors';
-import {margin} from 'src/components/config/spacing';
+import { signInWithEmail } from 'src/modules/auth/actions';
+import { authSelector } from 'src/modules/auth/selectors';
+import { requiredLoginSelector } from 'src/modules/common/selectors';
+import { margin } from 'src/components/config/spacing';
 
-import {changeColor} from 'src/utils/text-html';
+import { changeColor } from 'src/utils/text-html';
 
 class LoginScreen extends React.Component {
   static navigationOptions = {
@@ -39,23 +39,24 @@ class LoginScreen extends React.Component {
   }
 
   handleLogin = () => {
-    const {username, password} = this.state;
-    this.props.dispatch(signInWithEmail({username, password}));
+    const { username, password } = this.state;
+    console.log(username, password)
+    this.props.dispatch(signInWithEmail({ username, password }));
   };
 
   render() {
     const {
       t,
       navigation,
-      auth: {pending, loginError},
+      auth: { pending, loginError },
       requiredLogin,
     } = this.props;
-    const {username, password} = this.state;
-    const {message, errors} = loginError;
-
+    const { username, password } = this.state;
+    const { message, errors } = loginError;
+    console.log("pending",pending)
     return (
       <ThemeConsumer>
-        {({theme}) => (
+        {({ theme }) => (
           <ThemedView isFullView>
             <Header
               leftComponent={
@@ -81,7 +82,7 @@ class LoginScreen extends React.Component {
                   <Input
                     label={t('auth:text_input_email_address')}
                     value={username}
-                    onChangeText={(value) => this.setState({username: value})}
+                    onChangeText={(value) => this.setState({ username: value })}
                     error={errors && errors.username}
                     keyboardType="email-address"
                   />
@@ -89,7 +90,7 @@ class LoginScreen extends React.Component {
                     label={t('auth:text_input_password')}
                     value={password}
                     secureTextEntry
-                    onChangeText={(value) => this.setState({password: value})}
+                    onChangeText={(value) => this.setState({ password: value })}
                     error={errors && errors.password}
                   />
                   <Button

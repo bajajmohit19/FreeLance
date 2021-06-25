@@ -1,26 +1,37 @@
 import queryString from 'query-string';
 import request from 'src/utils/fetch';
-import {PLUGIN_NAME} from 'src/config/development';
-
+import { PLUGIN_NAME } from 'src/config/development';
+import configApi from '../../config/api'
 /**
  * API login with email and password
  * @param username
  * @param password
  * @returns {Promise<unknown>}
  */
-export const loginWithEmail = ({username, password}) =>
-  request.post(`/${PLUGIN_NAME}/v1/login`, {username, password});
+export const loginWithEmail = ({ username, password }) =>
+  request.post(configApi.login , { username, password });
 
+export const registerWithEmail = (inputData) =>
+  request.post(configApi.register, inputData);
+
+export const becomeASeller = (inputData) =>
+  request.update(configApi.addSeller, inputData);
+
+export const getSellerData = (inputData) =>
+  request.get1(configApi.getSeller, inputData);
+
+export const updateCustomer = (data) =>
+  request.update(configApi.update, data);
 /**
  * Login with Firebase
  * @param idToken Firebase user id token
  * @returns {Promise<unknown>}
  */
 export const loginWithMobile = (idToken) =>
-  request.post(`/${PLUGIN_NAME}/v1/login-otp`, {idToken});
+  request.post(`/${PLUGIN_NAME}/v1/login-otp`, { idToken });
 
 export const loginWithFacebook = (token) =>
-  request.post(`/${PLUGIN_NAME}/v1/facebook`, {token});
+  request.post(`/${PLUGIN_NAME}/v1/facebook`, { token });
 
 export const loginWithGoogle = (user) =>
   request.post(`/${PLUGIN_NAME}/v1/google`, user);
@@ -28,23 +39,21 @@ export const loginWithGoogle = (user) =>
 export const loginWithApple = (data) =>
   request.post(`/${PLUGIN_NAME}/v1/apple`, data);
 
-export const registerWithEmail = (data) =>
-  request.post(`/${PLUGIN_NAME}/v1/register`, data);
+
 
 export const forgotPassword = (user_login) =>
-  request.post(`/${PLUGIN_NAME}/v1/lost-password`, {user_login});
+  request.post(`/${PLUGIN_NAME}/v1/lost-password`, { user_login });
 
-export const changePassword = ({password_old, password_new}) =>
+export const changePassword = ({ password_old, password_new }) =>
   request.post(`/${PLUGIN_NAME}/v1/change-password`, {
     password_old,
     password_new,
   });
 
-export const changeEmail = ({u_password, u_email}) =>
-  request.patch('users/change-email', {u_password, u_email});
+export const changeEmail = ({ u_password, u_email }) =>
+  request.patch('users/change-email', { u_password, u_email });
 
-export const updateCustomer = (user_id, data) =>
-  request.put(`/${PLUGIN_NAME}/v1/customers/${user_id}`, data);
+
 
 export const getCustomer = (user_id) =>
   request.get(`/wc/v3/customers/${user_id}`);
