@@ -16,6 +16,7 @@ import {
   loginWithEmail,
   loginWithMobile,
   registerWithEmail,
+  addProduct,
   loginWithGoogle,
   loginWithFacebook,
   changeEmail,
@@ -31,6 +32,7 @@ import {
   isLogin,
   logout,
   becomeASeller,
+  updateSeller,
   getSellerData
 } from './service';
 
@@ -111,16 +113,7 @@ function* doLoginSuccess(token, user = {}, method = 'email') {
  * @param user
  * @returns {IterableIterator<*>}
  */
-function* doMakeASellerSuccess(isSeller) {
-  yield put({
-    type: Actions.BECOME_A_SELLER_SUCCESS,
-    payload: { isSeller },
-  });
 
-  yield call(NavigationService.navigate, rootSwitch.main);
-  yield call(AsyncStorage.setItem, 'isLogin', isSeller);
-
-}
 
 /**
  * Sign In saga
@@ -173,13 +166,19 @@ function* signInWithEmailSaga({ username, password }) {
  */
 function* becomeSeller({ payload }) {
   try {
-    ;
+    
     const signupData = yield call(becomeASeller, payload);
-
+   
     if (signupData?.status === 409 || signupData?.status === 422 || signupData?.status === 500) {
       yield call(showMessage, {
         message: signupData?.message,
         type: 'info',
+      });
+      yield put({
+        type: Actions.SIGN_UP_WITH_EMAIL_ERROR,
+        payload: {
+          message: signupData?.message,
+        },
       });
     }
     else {
@@ -187,7 +186,54 @@ function* becomeSeller({ payload }) {
         message: signupData?.message,
         type: 'success',
       });
+      yield put({
+        type: Actions.SIGN_UP_WITH_EMAIL_SUCCESS,
+        payload: {
+          message: signupData?.message,
+        },
+      });
       yield call(AsyncStorage.setItem, 'isSeller', signupData?.data?.user_type);
+
+    }
+
+  } catch (e) {
+    yield call(handleError, e);
+    yield put({
+      type: Actions.SIGN_UP_WITH_EMAIL_ERROR,
+      payload: {
+        message: e.message,
+      },
+    });
+  }
+}
+function* updateSellerData({ payload }) {
+  try {
+    
+    const signupData = yield call(updateSeller, payload);
+   
+    if (signupData?.status === 409 || signupData?.status === 422 || signupData?.status === 500) {
+      yield call(showMessage, {
+        message: signupData?.message,
+        type: 'info',
+      });
+      yield put({
+        type: Actions.SIGN_UP_WITH_EMAIL_ERROR,
+        payload: {
+          message: signupData?.message,
+        },
+      });
+    }
+    else {
+      yield call(showMessage, {
+        message: signupData?.message,
+        type: 'success',
+      });
+      yield put({
+        type: Actions.SIGN_UP_WITH_EMAIL_SUCCESS,
+        payload: {
+          message: signupData?.message,
+        },
+      });
 
     }
 
@@ -205,18 +251,27 @@ function* getSellerDataSaga({ payload }) {
   try {
     const seller = yield call(getSellerData);
     yield put({
+      type: Actions.REGISTER_OREO_USER,
+     
+    });
+    yield put({
       type: Actions.GET_SELLER_DETAILS_SUCCESS,
       payload: seller?.data
         
     });
-    if (cb) {
-      yield call(cb, seller);
+    yield put({
+      type: Actions.REGISTER_OREO_USER_SUCCESS,
+     
+    });
+    if (payload?.cb) {
+      yield call(payload?.cb, seller);
     }
   } catch (e) {
     console.log("error", e)
-    // yield put({
-    //   type: Actions.GET_CUSTOMER_ERROR,
-    // });
+    yield put({
+      type: Actions.REGISTER_OREO_USER_ERROR,
+    
+    });
   }
 }
 /**
@@ -302,17 +357,65 @@ function* signUpWithEmailSaga({ payload }) {
     const { data } = payload;
     const language = yield select(languageSelector);
     const signupData = yield call(registerWithEmail, data);
-
+    
     if (signupData?.status === 409 || signupData?.status === 422 || signupData?.status === 500) {
       yield call(showMessage, {
         message: signupData?.message,
         type: 'info',
+      });
+      yield put({
+        type: Actions.SIGN_UP_WITH_EMAIL_ERROR,
+        payload: {
+          message: signupData?.message,
+        },
       });
     }
     else {
       yield call(showMessage, {
         message: signupData?.message,
         type: 'success',
+      });
+      yield put({
+        type: Actions.SIGN_UP_WITH_EMAIL_SUCCESS,
+      });
+      yield call(doLoginSuccess, signupData?.data?.access_token, signupData?.data, 'otp');
+
+    }
+  } catch (e) {
+    yield call(handleError, e);
+    yield put({
+      type: Actions.SIGN_UP_WITH_EMAIL_ERROR,
+      payload: {
+        message: e.message,
+      },
+    });
+  }
+}
+function* addProductSaga({ payload }) {
+  try {
+    const { data } = payload;
+    const language = yield select(languageSelector);
+    const signupData = yield call(addProduct, data);
+    
+    if (signupData?.status === 409 || signupData?.status === 422 || signupData?.status === 500) {
+      yield call(showMessage, {
+        message: signupData?.message,
+        type: 'info',
+      });
+      yield put({
+        type: Actions.SIGN_UP_WITH_EMAIL_ERROR,
+        payload: {
+          message: signupData?.message,
+        },
+      });
+    }
+    else {
+      yield call(showMessage, {
+        message: signupData?.message,
+        type: 'success',
+      });
+      yield put({
+        type: Actions.SIGN_UP_WITH_EMAIL_SUCCESS,
       });
       yield call(doLoginSuccess, signupData?.data?.access_token, signupData?.data, 'otp');
 
@@ -588,6 +691,8 @@ function* getFilesDownloadCustomer({ payload }) {
 
 export default function* authSaga() {
   yield takeEvery(Actions.BECOME_A_SELLER, becomeSeller)
+  yield takeEvery(Actions.ADD_PRODUCT, addProductSaga)
+  yield takeEvery(Actions.UPDATE_SELLER, updateSellerData)
   yield takeEvery(Actions.GET_SELLER_DETAILS, getSellerDataSaga)
   yield takeEvery(Actions.SIGN_IN_WITH_EMAIL, signInWithEmailSaga);
   yield takeEvery(Actions.SIGN_IN_WITH_MOBILE, signInWithMobileSaga);

@@ -56,6 +56,7 @@ export const mainStack = {
   contact: 'ContactScreen',
   show_biz:'Sell On shop',
   account: 'AccountScreen',
+  addProduct:'AddProduct',
   change_password: 'ChangePasswordScreen',
   address_book: 'AddressBookScreen',
   order_list: 'OrderList',

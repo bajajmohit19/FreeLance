@@ -29,6 +29,7 @@ const initState = fromJS({
   pendingChangePassword: false,
   pendingForgotPassword: false,
   pendingUpdateCustomer: false,
+  pendingRegisterOreoUser: false,
   pendingGetCustomer: false,
   files: {
     data: [],
@@ -138,7 +139,11 @@ export default function authReducer(state = initState, action = {}) {
       return state.set('pendingGetCustomer', false);
     case Actions.UPDATE_CUSTOMER:
       return state.set('pendingUpdateCustomer', true);
-
+    case Actions.REGISTER_OREO_USER:
+      return state.set('pending', true);
+    case Actions.REGISTER_OREO_USER_SUCCESS:
+    case Actions.REGISTER_OREO_USER_ERROR:
+      return state.set('pending', false);
     case Actions.UPDATE_CUSTOMER_SUCCESS:
     case Actions.UPDATE_CUSTOMER_ERROR:
       return state.set('pendingUpdateCustomer', false);

@@ -9,13 +9,19 @@ import configApi from '../../config/api'
  * @returns {Promise<unknown>}
  */
 export const loginWithEmail = ({ username, password }) =>
-  request.post(configApi.login , { username, password });
+  request.post(configApi.login, { username, password });
 
 export const registerWithEmail = (inputData) =>
   request.post(configApi.register, inputData);
 
+export const addProduct = (inputData) =>
+  request.post(configApi.products, inputData);
+
 export const becomeASeller = (inputData) =>
   request.update(configApi.addSeller, inputData);
+
+export const updateSeller = (inputData) =>
+  request.update(configApi.updateSeller, inputData);
 
 export const getSellerData = (inputData) =>
   request.get1(configApi.getSeller, inputData);

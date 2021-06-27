@@ -20,6 +20,7 @@
     "text_product_review_form": "Write review",
     "text_me_screen": "Me",
     "text_account": "My account",
+    "add_product": "Add product",
     "text_orders": "Orders & Returns",
     "text_password": "Change Password",
     "text_address": "Address Book",
@@ -237,7 +238,17 @@
     "text_password_description": "Your new password must be atleast 6 characters long",
     "text_button_password": "Save new password",
 
-    "text_input_first_name": "First Name *",
+    "product_name": "Product Name *",
+    "category_id": "Category Id*",
+    "additional_info": "Additional Info Name *",
+    "short_description": "Short description",
+    "description": "Description *",
+    "total_quantity": "Total Quantity*",
+    "original_price": "Original Price *",
+    "discount_price": "Discount Price ",
+    "add_product":"Add product",
+
+
     "text_input_last_name": "Last Name *",
     "text_input_country": "Country / Region *",
     "text_input_address_1": "Address line 1 *",

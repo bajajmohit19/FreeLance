@@ -28,6 +28,15 @@ const InformationMe = ({isLogin, clickPage}) => {
         pad={padding.large}
         onPress={() => clickPage(mainStack.account)}
       />
+       <ListItem
+        leftIcon={icon(4, 'info')}
+        title={t('common:add_product')}
+        type="underline"
+        titleProps={titleProps}
+        chevron
+        pad={padding.large}
+        onPress={() => clickPage(mainStack.addProduct)}
+      />
       <ListItem
         leftIcon={icon(1, 'info')}
         title={t('common:text_orders')}

@@ -1,8 +1,8 @@
-import {grey5} from 'src/components/config/colors';
+import { grey5 } from 'src/components/config/colors';
 
 const listIcon = {
   setting: ['settings', 'help-circle', 'phone-call', 'log-out'],
-  info: ['user', 'file-text', 'message-square', 'download'],
+  info: ['user', 'file-text', 'message-square', 'download', 'user'],
 };
 
 export const icon = (visit = 0, type = 'setting') => {

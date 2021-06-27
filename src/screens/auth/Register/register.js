@@ -137,7 +137,7 @@ class RegisterScreen extends React.Component {
   render() {
     const {
       navigation,
-      auth: { pending },
+      auth: { pending , pendingRegisterOreoUser},
       enablePhoneNumber,
       t,
     } = this.props;
@@ -159,12 +159,13 @@ class RegisterScreen extends React.Component {
       confirmResult,
     } = this.state;
     const visible = visibleModal || !!(!user && confirmResult);
+    console.log(pendingRegisterOreoUser, pending)
     return (
 
       <ThemeConsumer>
         {({ theme }) => (
           <ThemedView isFullView>
-            {/* <Loading visible={pending} /> */}
+            <Loading visible={pending} />
             <Header
               leftComponent={<IconHeader />}
               centerComponent={<TextHeader title={t('common:text_register')} />}
@@ -237,7 +238,7 @@ class RegisterScreen extends React.Component {
                   <Button
                     title={t('auth:text_register')}
                     onPress={this.handleRegister}
-                    loading={loading}
+                    loading={pending}
                   />
                   <SocialMethods style={styles.viewAccount} />
                   <Text

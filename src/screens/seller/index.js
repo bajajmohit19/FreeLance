@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react'
 import { View, Text, KeyboardAvoidingView, ScrollView, StyleSheet, AsyncStorage } from 'react-native'
-import { ThemedView, Header } from 'src/components'
+import { ThemedView, Header, Loading } from 'src/components'
 import { TextHeader, IconHeader } from 'src/containers/HeaderComponent';
 import { useDispatch, useSelector } from 'react-redux'
 import Container from 'src/containers/Container';
@@ -10,16 +10,15 @@ import { margin } from 'src/components/config/spacing';
 import { INITIAL_COUNTRY } from 'src/config/config-input-phone-number';
 import InputMobile from 'src/containers/input/InputMobile';
 import { Image, Icon } from 'src/components';
-import { sellerDataSelector } from 'src/modules/auth/selectors'
-import { becomeASeller, getSellerDetails } from 'src/modules/auth/actions'
+import { sellerDataSelector,authSelector  } from 'src/modules/auth/selectors'
+import { becomeASeller, getSellerDetails, updateSeller } from 'src/modules/auth/actions'
 function Seller({ t }) {
-    const { sellerData } = useSelector((state) => ({
-        sellerData: sellerDataSelector(state)
+    const { sellerData, auth } = useSelector((state) => ({
+        sellerData: sellerDataSelector(state),
+        auth: authSelector(state)
 
     })
     )
-
-    console.log("asdasudasfefwedwasdas", sellerData)
     const dispatch = useDispatch()
     const [sellerState, setState] = useState({
         first_name: '',
@@ -34,8 +33,10 @@ function Seller({ t }) {
         // errors: null
 
     })
+    const [seller, setSeller] = useState(false)
     const handleSaveCustomer = () => {
-        dispatch(becomeASeller(sellerState));
+        if(seller) dispatch(updateSeller(sellerState))
+        else dispatch(becomeASeller(sellerState));
     }
     const getSellerDetails1 = () => {
         dispatch(getSellerDetails());
@@ -46,6 +47,7 @@ function Seller({ t }) {
     useEffect(() => {
         AsyncStorage.getItem('isSeller').then((d) => {
             if (d == 'SELLER') {
+                setSeller(true)
                 getSellerDetails1()
             }
         }).catch(e => {
@@ -60,6 +62,8 @@ function Seller({ t }) {
     const { first_name, address1, shop_name, business_contact, address2, city, postcode, description, state } = sellerState
     return (
         <ThemedView isFullView>
+            <Loading visible={auth?.pending} />
+
             <Header
                 leftComponent={<IconHeader />}
                 centerComponent={
@@ -158,9 +162,9 @@ function Seller({ t }) {
                 </ScrollView>
                 <Container>
                     <Button
-                        title={sellerData !== null ? 'Update' :  'Save'}
+                        title={'Save'}
                         containerStyle={styles.button}
-                        // loading={pendingUpdateCustomer}
+                        loading={auth?.pending}
                         onPress={handleSaveCustomer}
                     />
                 </Container>

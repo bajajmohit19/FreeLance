@@ -13,4 +13,6 @@ export default {
   register : NEWAPI + 'auth/signup',
   addSeller : NEWAPI + 'seller/add',
   getSeller : NEWAPI + 'seller',
+  updateSeller: NEWAPI + 'seller/update',
+  products: NEWAPI + 'products/add'
 };

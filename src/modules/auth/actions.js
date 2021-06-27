@@ -19,6 +19,12 @@ export function becomeASeller(data) {
     payload : data
   };
 }
+export function updateSeller(data) {
+  return {
+    type: Actions.UPDATE_SELLER,
+    payload : data
+  };
+}
 
 /**
  * Action login mobile
@@ -40,6 +46,14 @@ export function signInWithMobile(tokenId) {
 export function signUpWithEmail(data) {
   return {
     type: Actions.SIGN_UP_WITH_EMAIL,
+    payload: {
+      data,
+    },
+  };
+}
+export function addProduct(data) {
+  return {
+    type: Actions.ADD_PRODUCT,
     payload: {
       data,
     },
@@ -101,9 +115,16 @@ export function isLogin() {
     type: Actions.IS_LOGIN,
   };
 }
-export function getSellerDetails() {
+
+/**
+ * Get seller data
+ * @param cb
+ * @returns {{type: string, payload: { cb: *}}}
+ */
+export function getSellerDetails(cb = () => {}) {
   return {
     type: Actions.GET_SELLER_DETAILS,
+    cb
   };
 }
 
