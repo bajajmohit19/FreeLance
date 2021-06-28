@@ -104,3 +104,6 @@ export const digitsVerifyOtp = (data) =>
 
 export const getFilesDownload = (user_id) =>
   request.get(`/wc/v3/customers/${user_id}/downloads`);
+
+export const updateSellerLogo = (data) =>
+  request.post(configApi.uploadSellerLogo, data);

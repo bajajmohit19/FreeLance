@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { connect } from 'react-redux';
 import { useTranslation } from 'react-i18next';
 import { useNavigation } from '@react-navigation/native';
@@ -6,7 +6,7 @@ import { useNavigation } from '@react-navigation/native';
 import truncate from 'lodash/truncate';
 import isEqual from 'lodash/isEqual';
 
-import { StyleSheet } from 'react-native';
+import { PermissionsAndroid, StyleSheet } from 'react-native';
 import { Text, ListItem } from 'src/components';
 import Button from 'src/containers/Button';
 import Separator from 'src/containers/Separator';
@@ -17,13 +17,123 @@ import { authSelector } from 'src/modules/auth/selectors';
 import { mainStack, rootSwitch, authStack } from 'src/config/navigator';
 import { margin, padding } from 'src/components/config/spacing';
 
+import ImagePicker from 'react-native-image-picker';
+import { updateSellerLogo, updateUserSuccess } from '../../../modules/auth/actions';
+
+const requestCameraPermission = async () => {
+  if (Platform.OS === 'android') {
+    try {
+      const granted = await PermissionsAndroid.request(
+        PermissionsAndroid.PERMISSIONS.CAMERA,
+        {
+          title: 'Camera Permission',
+          message: 'App needs camera permission',
+        },
+      );
+      // If CAMERA Permission is granted
+      return 'granted' === PermissionsAndroid.RESULTS.GRANTED;
+    } catch (err) {
+      alert('Write permission err', err);
+      console.warn(err);
+      return false;
+    }
+  } else return true;
+};
+
+const requestExternalWritePermission = async () => {
+  if (Platform.OS === 'android') {
+    try {
+      const granted = await PermissionsAndroid.request(
+        PermissionsAndroid.PERMISSIONS.WRITE_EXTERNAL_STORAGE,
+        {
+          title: 'External Storage Write Permission',
+          message: 'App needs write permission',
+        },
+      );
+      // If WRITE_EXTERNAL_STORAGE Permission is granted
+      return 'granted' === PermissionsAndroid.RESULTS.GRANTED;
+    } catch (err) {
+      console.warn(err);
+      alert('Write permission err', err);
+    }
+    return false;
+  } else return true;
+};
+
 const HeaderMe = (props) => {
   const {
-    auth: { isLogin, user },
+    auth: { isLogin, user, pendingSellerLogo },
   } = props;
+
   const { t } = useTranslation();
+  const [logoBase, setLogo] = useState(null)
   const navigation = useNavigation();
 
+  useEffect(() => {
+    if (logoBase)
+      updateShopLogo()
+  }, [logoBase])
+  const updateShopLogo = () => {
+    const { t, dispatch } = props;
+    if (!logoBase) {
+
+      showMessage({
+        message: t('notifications:text_fill_value'),
+        type: 'danger',
+      });
+    } else {
+      dispatch(updateSellerLogo(logoBase, saveDataUser));
+    }
+  }
+
+  const saveDataUser = (logoUrl) => {
+    console.log("logooo",logoUrl)
+    const { dispatch } = props;
+
+    dispatch(
+      updateUserSuccess({
+        logo: logoUrl,
+      }),
+    );
+  };
+  console.log("USEr",user)
+  const captureImage = async (type = 'photo') => {
+    const options = {
+      title: 'Select Shop Logo',
+      type: 'photo',
+      storageOptions: {
+        skipBackup: true,
+        path: 'images',
+      },
+    };
+    let isCameraPermitted = await requestCameraPermission();
+    let isStoragePermitted = await requestExternalWritePermission();
+    if (isCameraPermitted && isStoragePermitted) {
+      ImagePicker.showImagePicker(options, (response) => {
+
+        if (response.didCancel) {
+          // alert('User cancelled camera picker');
+          return;
+        } else if (response.errorCode == 'camera_unavailable') {
+          alert('Camera not available on device');
+          return;
+        } else if (response.errorCode == 'permission') {
+          alert('Permission not satisfied');
+          return;
+        } else if (response.errorCode == 'others') {
+          alert(response.errorMessage);
+          return;
+        }
+        else {
+          // You can also display the image using data:
+          // let source = {
+          //   uri: 'data:image/jpeg;base64,' + response.data
+          // };
+          setLogo(() => response.data)
+        }
+      });
+    }
+  };
   let nameUser = t('profile:text_hello_default');
   if (isLogin && user && !isEqual(user, {})) {
     const stringName = t('profile:text_hello', { name: user.first_name });
@@ -64,12 +174,13 @@ const HeaderMe = (props) => {
     <ListItem
       title={nameUser}
       leftAvatar={{
-        source: user.avatar
-          ? { uri: user.avatar }
+        source: user?.logo
+          ? { uri: user?.logo }
           : require('src/assets/images/pDefault.png'),
         size: 60,
         rounded: true,
-        onPress: () => navigation.navigate(mainStack.account),
+        // onPress: () => navigation.navigate(mainStack.account),
+        onPress: () => captureImage()
       }}
       titleProps={{
         medium: true,

@@ -1,25 +1,25 @@
-import React, {Component} from 'react';
-import {connect} from 'react-redux';
-import {withTranslation} from 'react-i18next';
-import {StyleSheet, ScrollView, View, Linking} from 'react-native';
-import {Header, ThemedView, Text} from 'src/components';
+import React, { Component } from 'react';
+import { connect } from 'react-redux';
+import { withTranslation } from 'react-i18next';
+import { StyleSheet, ScrollView, View, Linking } from 'react-native';
+import { Header, ThemedView, Text } from 'src/components';
 
 import HeaderMe from './containers/HeaderMe';
 import SettingMe from './containers/SettingMe';
 import InformationMe from './containers/InformationMe';
 import Container from 'src/containers/Container';
 import SocialIcon from 'src/containers/SocialIcon';
-import {TextHeader, CartIcon} from 'src/containers/HeaderComponent';
+import { TextHeader, CartIcon } from 'src/containers/HeaderComponent';
 
-import {authSelector} from 'src/modules/auth/selectors';
+import { authSelector } from 'src/modules/auth/selectors';
 import {
   wishListSelector,
   configsSelector,
   languageSelector,
 } from 'src/modules/common/selectors';
 
-import {grey5} from 'src/components/config/colors';
-import {margin} from 'src/components/config/spacing';
+import { grey5 } from 'src/components/config/colors';
+import { margin } from 'src/components/config/spacing';
 
 class MeScreen extends Component {
   icon = (name) => {
@@ -42,7 +42,7 @@ class MeScreen extends Component {
     const {
       t,
       configs,
-      auth: {isLogin},
+      auth: { isLogin },
       language,
     } = this.props;
 
@@ -54,7 +54,7 @@ class MeScreen extends Component {
         />
         <ScrollView>
           <Container style={styles.viewContent}>
-            <HeaderMe />
+            <HeaderMe {...this.props} />
             <InformationMe isLogin={isLogin} clickPage={this.goPageOther} />
             <SettingMe
               isLogin={isLogin}

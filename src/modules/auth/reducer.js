@@ -37,6 +37,7 @@ const initState = fromJS({
     error: true,
     refreshing: false,
   },
+  pendingSellerLogo: false
 });
 
 export default function authReducer(state = initState, action = {}) {
@@ -197,6 +198,12 @@ export default function authReducer(state = initState, action = {}) {
         error: false,
         refreshing: false,
       });
+    case Actions.UPDATE_SELLER_LOGO:
+      console.log('settttttt')
+      return state.set('pendingSellerLogo', true);
+    case Actions.UPDATE_SELLER_LOGO_SUCCESS:
+    case Actions.UPDATE_SELLER_LOGO_ERROR:
+      return state.set('pendingSellerLogo', false);
     default:
       return state;
   }

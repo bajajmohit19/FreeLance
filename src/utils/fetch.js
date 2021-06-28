@@ -144,7 +144,9 @@ const get1 = (url, data, method = 'GET') => {
 };
 const post = (url, data, method = 'POST') => {
   return new Promise(async (next, error) => {
-    axios.post(url, { ...data }).then((d) => {
+    const token = await _getToken()
+    axios.post(url, { ...data }, token).then((d) => {
+      console.log("!!!!!!!!!!!!!!!!!!!!!!!!!",d?.data)
       next(d.data)
     }).catch((err) => {
       console.log("ERRRRr", err)

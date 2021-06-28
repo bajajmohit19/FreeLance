@@ -33,7 +33,8 @@ import {
   logout,
   becomeASeller,
   updateSeller,
-  getSellerData
+  getSellerData,
+  updateSellerLogo
 } from './service';
 
 import { validatorForgotPassword, validatorChangePassword } from './validator';
@@ -257,7 +258,7 @@ function* getSellerDataSaga({ payload }) {
     yield put({
       type: Actions.GET_SELLER_DETAILS_SUCCESS,
       payload: seller?.data
-        
+
     });
     yield put({
       type: Actions.REGISTER_OREO_USER_SUCCESS,
@@ -391,6 +392,11 @@ function* signUpWithEmailSaga({ payload }) {
     });
   }
 }
+/**
+ * Sign up with email
+ * @param payload
+ * @returns {IterableIterator<*>}
+ */
 function* addProductSaga({ payload }) {
   try {
     const { data } = payload;
@@ -483,7 +489,11 @@ function* signInWithAppleSaga({ payload }) {
     });
   }
 }
-
+/**
+ * Sign up with email
+ * @param payload
+ * @returns {IterableIterator<*>}
+ */
 function* forgotPasswordSideEffect(action) {
   try {
     const language = yield select(languageSelector);
@@ -515,7 +525,11 @@ function* forgotPasswordSideEffect(action) {
     });
   }
 }
-
+/**
+ * Sign up with email
+ * @param payload
+ * @returns {IterableIterator<*>}
+ */
 function* checkAuthSideEffectSaga() {
   try {
     const user = yield call(isLogin);
@@ -689,6 +703,38 @@ function* getFilesDownloadCustomer({ payload }) {
   }
 }
 
+/**
+ * Update seller logo
+ * @returns {IterableIterator<*>}
+ */
+function* updateSellerLogoSaga({ payload }) {
+  try {
+    const { data, cb } = payload;
+    // const userID = yield select(userIdSelector);
+    const formData = new FormData();
+    formData.append('logo', "kudfhdu")
+    const uploadLogo =  yield call(updateSellerLogo, {logo: data});
+    yield put({
+      type: Actions.UPDATE_SELLER_LOGO_SUCCESS,
+    });
+    yield call(showMessage, {
+      message: 'Update success',
+      type: 'success',
+    });
+    yield call(() => {
+      cb(uploadLogo?.data?.logo)
+    });
+  } catch (e) {
+    yield put({
+      type: Actions.UPDATE_SELLER_LOGO_ERROR,
+    });
+    yield call(showMessage, {
+      message: e.message,
+      type: 'danger',
+    });
+  }
+}
+
 export default function* authSaga() {
   yield takeEvery(Actions.BECOME_A_SELLER, becomeSeller)
   yield takeEvery(Actions.ADD_PRODUCT, addProductSaga)
@@ -711,4 +757,5 @@ export default function* authSaga() {
   yield takeEvery(Actions.SIGN_IN_WITH_OTP, signInWithOtpSaga);
   yield takeEvery(Actions.SIGN_UP_WITH_OTP, signUpWithOtplSaga);
   yield takeEvery(Actions.GET_LIST_FILE_DOWNLOAD, getFilesDownloadCustomer);
+  yield takeEvery(Actions.UPDATE_SELLER_LOGO, updateSellerLogoSaga);
 }

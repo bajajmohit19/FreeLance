@@ -6,7 +6,7 @@ import * as Actions from './constants';
  * @param password
  * @returns {{type: string, username: *, password: *}}
  */
-export function signInWithEmail({username, password}) {
+export function signInWithEmail({ username, password }) {
   return {
     type: Actions.SIGN_IN_WITH_EMAIL,
     username,
@@ -16,7 +16,7 @@ export function signInWithEmail({username, password}) {
 export function becomeASeller(data) {
   return {
     type: Actions.BECOME_A_SELLER,
-    payload : data
+    payload: data
   };
 }
 export function updateSeller(data) {
@@ -147,7 +147,7 @@ export function checkAuth() {
  * @param u_email
  * @returns {{type: string, payload: {password: *, email: *}}}
  */
-export function changeEmail({u_password, u_email}) {
+export function changeEmail({ u_password, u_email }) {
   return {
     type: Actions.CHANGE_EMAIL,
     payload: {
@@ -163,7 +163,7 @@ export function changeEmail({u_password, u_email}) {
  * @param cb
  * @returns {{type: string, payload: {id: *, cb: *}}}
  */
-export function fetchCustomer(id, cb = () => {}) {
+export function fetchCustomer(id, cb = () => { }) {
   return {
     type: Actions.GET_CUSTOMER,
     payload: {
@@ -178,7 +178,7 @@ export function fetchCustomer(id, cb = () => {}) {
  * @param data
  * @returns {{type: string, payload: {data: *, cb: *}}}
  */
-export function updateCustomer(data, cb = () => {}) {
+export function updateCustomer(data, cb = () => { }) {
   return {
     type: Actions.UPDATE_CUSTOMER,
     payload: {
@@ -284,5 +284,20 @@ export function getFilesDonwload() {
   return {
     type: Actions.GET_LIST_FILE_DOWNLOAD,
     payload: {},
+  };
+}
+
+/**
+ * Update seller logo
+ * @param data
+ * @returns {{type: string, payload: {data: *, cb: *}}}
+ */
+export function updateSellerLogo(data, cb = () => { }) {
+  return {
+    type: Actions.UPDATE_SELLER_LOGO,
+    payload: {
+      data,
+      cb,
+    },
   };
 }
