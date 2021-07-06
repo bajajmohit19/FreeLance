@@ -133,7 +133,8 @@ function* signInWithEmailSaga({ username, password }) {
     });
     if (status === 409 || status === 422 || status === 500) {
       yield call(showMessage, {
-        message: message,
+        description: message?.password && message?.username ? 'Both fields cannot be blank' : message?.username ? message?.username[0] : message?.password[0],
+        message: message?.password && message?.username ? 'username and password' : message?.username ? 'username' : ' password',
         type: 'info',
       });
       yield put({
@@ -167,9 +168,11 @@ function* signInWithEmailSaga({ username, password }) {
  */
 function* becomeSeller({ payload }) {
   try {
-    
-    const signupData = yield call(becomeASeller, payload);
-   
+    const { data, cb } = payload;
+
+
+    const signupData = yield call(becomeASeller, data);
+
     if (signupData?.status === 409 || signupData?.status === 422 || signupData?.status === 500) {
       yield call(showMessage, {
         message: signupData?.message,
@@ -193,7 +196,14 @@ function* becomeSeller({ payload }) {
           message: signupData?.message,
         },
       });
-      yield call(AsyncStorage.setItem, 'isSeller', signupData?.data?.user_type);
+      yield put({
+        type: Actions.BECOME_A_SELLER_SUCCESS,
+      });
+      yield call(
+        cb(signupData?.data)
+      )
+
+      // yield call(AsyncStorage.setItem, 'isSeller', signupData?.data?.user_type);
 
     }
 
@@ -209,9 +219,9 @@ function* becomeSeller({ payload }) {
 }
 function* updateSellerData({ payload }) {
   try {
-    
+
     const signupData = yield call(updateSeller, payload);
-   
+
     if (signupData?.status === 409 || signupData?.status === 422 || signupData?.status === 500) {
       yield call(showMessage, {
         message: signupData?.message,
@@ -250,11 +260,12 @@ function* updateSellerData({ payload }) {
 }
 function* getSellerDataSaga({ payload }) {
   try {
-    const seller = yield call(getSellerData);
     yield put({
       type: Actions.REGISTER_OREO_USER,
-     
+
     });
+    const seller = yield call(getSellerData);
+
     yield put({
       type: Actions.GET_SELLER_DETAILS_SUCCESS,
       payload: seller?.data
@@ -262,7 +273,7 @@ function* getSellerDataSaga({ payload }) {
     });
     yield put({
       type: Actions.REGISTER_OREO_USER_SUCCESS,
-     
+
     });
     if (payload?.cb) {
       yield call(payload?.cb, seller);
@@ -271,7 +282,7 @@ function* getSellerDataSaga({ payload }) {
     console.log("error", e)
     yield put({
       type: Actions.REGISTER_OREO_USER_ERROR,
-    
+
     });
   }
 }
@@ -358,8 +369,9 @@ function* signUpWithEmailSaga({ payload }) {
     const { data } = payload;
     const language = yield select(languageSelector);
     const signupData = yield call(registerWithEmail, data);
-    
+
     if (signupData?.status === 409 || signupData?.status === 422 || signupData?.status === 500) {
+      console.log(signupData)
       yield call(showMessage, {
         message: signupData?.message,
         type: 'info',
@@ -402,7 +414,7 @@ function* addProductSaga({ payload }) {
     const { data } = payload;
     const language = yield select(languageSelector);
     const signupData = yield call(addProduct, data);
-    
+
     if (signupData?.status === 409 || signupData?.status === 422 || signupData?.status === 500) {
       yield call(showMessage, {
         message: signupData?.message,
@@ -713,7 +725,7 @@ function* updateSellerLogoSaga({ payload }) {
     // const userID = yield select(userIdSelector);
     const formData = new FormData();
     formData.append('logo', "kudfhdu")
-    const uploadLogo =  yield call(updateSellerLogo, {logo: data});
+    const uploadLogo = yield call(updateSellerLogo, { logo: data });
     yield put({
       type: Actions.UPDATE_SELLER_LOGO_SUCCESS,
     });

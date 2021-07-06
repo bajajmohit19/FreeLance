@@ -11,6 +11,7 @@ import {
     Switch,
     KeyboardAvoidingView,
     Platform,
+    PermissionsAndroid
 } from 'react-native';
 import {
     Header,
@@ -37,14 +38,57 @@ import { changeColor } from 'src/utils/text-html';
 import { showMessage } from 'react-native-flash-message';
 import { INITIAL_COUNTRY } from 'src/config/config-input-phone-number';
 import { formatPhoneWithCountryCode } from 'src/utils/phone-formatter';
+import Avtar from 'src/components/avatar/Avatar.js'
+import ImagePicker from 'react-native-image-picker';
+
+const requestCameraPermission = async () => {
+    if (Platform.OS === 'android') {
+        try {
+            const granted = await PermissionsAndroid.request(
+                PermissionsAndroid.PERMISSIONS.CAMERA,
+                {
+                    title: 'Camera Permission',
+                    message: 'App needs camera permission',
+                },
+            );
+            // If CAMERA Permission is granted
+            return 'granted' === PermissionsAndroid.RESULTS.GRANTED;
+        } catch (err) {
+            alert('Write permission err', err);
+            console.warn(err);
+            return false;
+        }
+    } else return true;
+};
+
+const requestExternalWritePermission = async () => {
+    if (Platform.OS === 'android') {
+        try {
+            const granted = await PermissionsAndroid.request(
+                PermissionsAndroid.PERMISSIONS.WRITE_EXTERNAL_STORAGE,
+                {
+                    title: 'External Storage Write Permission',
+                    message: 'App needs write permission',
+                },
+            );
+            // If WRITE_EXTERNAL_STORAGE Permission is granted
+            return 'granted' === PermissionsAndroid.RESULTS.GRANTED;
+        } catch (err) {
+            console.warn(err);
+            alert('Write permission err', err);
+        }
+        return false;
+    } else return true;
+};
 
 class AddProduct extends React.Component {
+
     constructor(props, context) {
         super(props, context);
         this.state = {
             data: {
                 product_name: '',
-                category_id: '',
+                category_id: 'nQrXwjhIpaVFx8faw68V8BCCghcse6iE',
                 additional_info: '',
                 short_description: '',
                 description: '',
@@ -54,6 +98,8 @@ class AddProduct extends React.Component {
                 country_no: '',
                 country_code: '',
                 exclusive_offers: false,
+                image: null,
+                product_images: []
             },
             user: null,
             confirmResult: null,
@@ -73,7 +119,43 @@ class AddProduct extends React.Component {
     componentWillUnmount() {
 
     }
+    captureImage = async (type = 'photo', field_name) => {
+        const options = {
+            title: 'Select Shop Logo',
+            type: 'photo',
+            storageOptions: {
+                skipBackup: true,
+                path: 'images',
+            },
+        };
+        let isCameraPermitted = await requestCameraPermission();
+        let isStoragePermitted = await requestExternalWritePermission();
+        if (isCameraPermitted && isStoragePermitted) {
+            ImagePicker.showImagePicker(options, (response) => {
 
+                if (response.didCancel) {
+                    // alert('User cancelled camera picker');
+                    return;
+                } else if (response.errorCode == 'camera_unavailable') {
+                    alert('Camera not available on device');
+                    return;
+                } else if (response.errorCode == 'permission') {
+                    alert('Permission not satisfied');
+                    return;
+                } else if (response.errorCode == 'others') {
+                    alert(response.errorMessage);
+                    return;
+                }
+                else {
+                    // You can also display the image using data:
+                    // let source = {
+                    //   uri: 'data:image/jpeg;base64,' + response.data
+                    // };
+                    this.setState({ data: { ...this.state.data, [field_name]: field_name == 'product_images' ? [response?.data] : response?.data } })
+                }
+            });
+        }
+    };
     changeData = (value) => {
         this.setState({
             data: {
@@ -86,7 +168,7 @@ class AddProduct extends React.Component {
     register = () => {
         const { data } = this.state;
 
-        this.props.dispatch(addProduct(payload));
+        this.props.dispatch(addProduct(data));
         this.setState({ loading: false });
 
     }
@@ -148,7 +230,7 @@ class AddProduct extends React.Component {
                         <Loading visible={pending} />
                         <Header
                             leftComponent={<IconHeader />}
-                            centerComponent={<TextHeader title={t('common:text_register')} />}
+                            centerComponent={<TextHeader title={t('profile:add_product')} />}
                         />
                         <KeyboardAvoidingView behavior="height" style={styles.keyboard}>
                             <ScrollView>
@@ -215,10 +297,41 @@ class AddProduct extends React.Component {
                                         error={errors && errors.discount_price}
                                     />
 
+                                    <View style={styles.addButton}>
+                                        <View style={styles.avtar}>
+                                            <Avtar
+                                                renderPlaceholderContent={<Text>Product Image</Text>}
+                                               
+                                                source={this.state.data?.image
+                                                    ? { uri: `data:image/png;base64, ${this.state.data?.image}` }
+                                                    : require('src/assets/images/pDefault.png')}
+                                                size={60}
+                                                rounded={true}
+                                                showEditButton
+                                                onPress={() => this.captureImage('photo', 'image')}
+                                            />
+                                        </View>
+                                        <View>
+                                            <Avtar
+                                                renderPlaceholderContent={<Text>Product Images</Text>}
+
+                                                source={
+                                                    this.state.data?.product_images.length
+                                                        ? { uri: `data:image/png;base64, ${this.state.data?.product_images[0]}` }
+                                                        :
+                                                        require('src/assets/images/pDefault.png')}
+                                                size={60}
+                                                showEditButton
+                                                rounded={true}
+                                                onPress={() => this.captureImage('photo', 'product_images')}
+                                            />
+                                        </View>
+
+                                    </View>
 
 
-
-                                    <View style={{flex:1, borderColor:'#000', borderWidth:1, marginTop:16}}>
+                                    <View
+                                    >
                                         <Button
                                             title={t('profile:add_product')}
                                             onPress={this.handleRegister}
@@ -246,10 +359,16 @@ const styles = StyleSheet.create({
         flexDirection: 'row',
         alignItems: 'flex-start',
     },
+    avtar: {
+        paddingRight: 4
+    },
     textSwitch: {
         flex: 1,
         lineHeight: lineHeights.h4,
         marginRight: margin.large,
+    },
+    addButton: {
+        display: 'flex', flexDirection: 'row', padding: 4
     },
     viewAccount: {
         marginVertical: margin.big,
