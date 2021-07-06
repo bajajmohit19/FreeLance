@@ -6,7 +6,7 @@ import { useNavigation } from '@react-navigation/native';
 import truncate from 'lodash/truncate';
 import isEqual from 'lodash/isEqual';
 
-import { PermissionsAndroid, StyleSheet } from 'react-native';
+import { ActivityIndicator, PermissionsAndroid, StyleSheet } from 'react-native';
 import { Text, ListItem } from 'src/components';
 import Button from 'src/containers/Button';
 import Separator from 'src/containers/Separator';
@@ -18,7 +18,7 @@ import { mainStack, rootSwitch, authStack } from 'src/config/navigator';
 import { margin, padding } from 'src/components/config/spacing';
 
 import ImagePicker from 'react-native-image-picker';
-import { updateSellerLogo, updateUserSuccess } from '../../../modules/auth/actions';
+import { updateSellerLogo, updateUserSuccess, updateSellerLogoSuccess } from '../../../modules/auth/actions';
 
 const requestCameraPermission = async () => {
   if (Platform.OS === 'android') {
@@ -73,6 +73,11 @@ const HeaderMe = (props) => {
     if (logoBase)
       updateShopLogo()
   }, [logoBase])
+  useEffect(() => {
+    const { dispatch } = props;
+    dispatch(updateSellerLogoSuccess());
+
+  }, [])
   const updateShopLogo = () => {
     const { t, dispatch } = props;
     if (!logoBase) {
@@ -87,7 +92,6 @@ const HeaderMe = (props) => {
   }
 
   const saveDataUser = (logoUrl) => {
-    console.log("logooo",logoUrl)
     const { dispatch } = props;
 
     dispatch(
@@ -96,7 +100,8 @@ const HeaderMe = (props) => {
       }),
     );
   };
-  console.log("USEr",user)
+
+  console.log(user)
   const captureImage = async (type = 'photo') => {
     const options = {
       title: 'Select Shop Logo',
@@ -171,6 +176,8 @@ const HeaderMe = (props) => {
     );
   }
   return (
+    pendingSellerLogo ?
+      <ActivityIndicator size='large' color='black' /> :
     <ListItem
       title={nameUser}
       leftAvatar={{

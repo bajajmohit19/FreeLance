@@ -301,3 +301,10 @@ export function updateSellerLogo(data, cb = () => { }) {
     },
   };
 }
+
+
+export function updateSellerLogoSuccess() {
+  return {
+    type: Actions.UPDATE_SELLER_LOGO_SUCCESS
+  };
+}
