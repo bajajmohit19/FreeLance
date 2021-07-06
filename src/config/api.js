@@ -16,4 +16,5 @@ export default {
   updateSeller: NEWAPI + 'seller/update',
   products: NEWAPI + 'products/add',
   uploadSellerLogo : NEWAPI + 'seller/upload-logo',
+  uploadCustomerLogo : NEWAPI + 'profile/upload-image',
 };

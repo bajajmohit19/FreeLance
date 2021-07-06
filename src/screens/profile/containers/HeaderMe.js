@@ -18,7 +18,7 @@ import { mainStack, rootSwitch, authStack } from 'src/config/navigator';
 import { margin, padding } from 'src/components/config/spacing';
 
 import ImagePicker from 'react-native-image-picker';
-import { updateSellerLogo, updateUserSuccess, updateSellerLogoSuccess } from '../../../modules/auth/actions';
+import { updateUserLogo, updateUserSuccess, updateUserLogoSuccess } from '../../../modules/auth/actions';
 
 const requestCameraPermission = async () => {
   if (Platform.OS === 'android') {
@@ -62,9 +62,8 @@ const requestExternalWritePermission = async () => {
 
 const HeaderMe = (props) => {
   const {
-    auth: { isLogin, user, pendingSellerLogo },
+    auth: { isLogin, user, pendingUserLogo },
   } = props;
-
   const { t } = useTranslation();
   const [logoBase, setLogo] = useState(null)
   const navigation = useNavigation();
@@ -75,7 +74,7 @@ const HeaderMe = (props) => {
   }, [logoBase])
   useEffect(() => {
     const { dispatch } = props;
-    dispatch(updateSellerLogoSuccess());
+    dispatch(updateUserLogoSuccess());
 
   }, [])
   const updateShopLogo = () => {
@@ -87,7 +86,7 @@ const HeaderMe = (props) => {
         type: 'danger',
       });
     } else {
-      dispatch(updateSellerLogo(logoBase, saveDataUser));
+      dispatch(updateUserLogo({ data: logoBase, user }, saveDataUser));
     }
   }
 
@@ -174,31 +173,31 @@ const HeaderMe = (props) => {
     );
   }
   return (
-    pendingSellerLogo ?
+    pendingUserLogo ?
       <ActivityIndicator size='large' color='black' /> :
-    <ListItem
-      title={nameUser}
-      leftAvatar={{
-        source: user?.user_type == 'SELLER'  
-          ? { uri: user?.seller?.logo } : user?.user_type !== 'SELLER' ? { uri: user?.logo } 
-          : require('src/assets/images/pDefault.png'),
-        size: 60,
-        rounded: true,
-        // onPress: () => navigation.navigate(mainStack.account),
-        onPress: () => captureImage()
-      }}
-      titleProps={{
-        medium: true,
-        onPress: () => navigation.navigate(mainStack.account),
-      }}
-      // rightElement={
-      //   <TouchableOpacity style={styles.loginBell} onPress={() => false && navigation.navigate(profileStack.notification_list)}>
-      //     <Icon name="bell" size={20} />
-      //     {/*<Badge status="error" value={2} badgeStyle={styles.badge} textStyle={styles.textBadge} />*/}
-      //   </TouchableOpacity>
-      // }
-      containerStyle={styles.item}
-    />
+      <ListItem
+        title={nameUser}
+        leftAvatar={{
+          source: user?.user_type == 'SELLER'
+            ? { uri: user?.seller?.logo } : user?.user_type !== 'SELLER' ? { uri: user?.logo }
+              : require('src/assets/images/pDefault.png'),
+          size: 60,
+          rounded: true,
+          // onPress: () => navigation.navigate(mainStack.account),
+          onPress: () => captureImage()
+        }}
+        titleProps={{
+          medium: true,
+          onPress: () => navigation.navigate(mainStack.account),
+        }}
+        // rightElement={
+        //   <TouchableOpacity style={styles.loginBell} onPress={() => false && navigation.navigate(profileStack.notification_list)}>
+        //     <Icon name="bell" size={20} />
+        //     {/*<Badge status="error" value={2} badgeStyle={styles.badge} textStyle={styles.textBadge} />*/}
+        //   </TouchableOpacity>
+        // }
+        containerStyle={styles.item}
+      />
   );
 };
 

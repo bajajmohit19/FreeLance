@@ -107,3 +107,6 @@ export const getFilesDownload = (user_id) =>
 
 export const updateSellerLogo = (data) =>
   request.post(configApi.uploadSellerLogo, data);
+
+export const uploadCustomerLogo = (data) =>
+  request.post(configApi.uploadCustomerLogo, data);

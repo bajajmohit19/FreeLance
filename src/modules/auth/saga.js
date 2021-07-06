@@ -34,7 +34,8 @@ import {
   becomeASeller,
   updateSeller,
   getSellerData,
-  updateSellerLogo
+  updateSellerLogo,
+  uploadCustomerLogo
 } from './service';
 
 import { validatorForgotPassword, validatorChangePassword } from './validator';
@@ -719,26 +720,26 @@ function* getFilesDownloadCustomer({ payload }) {
  * Update seller logo
  * @returns {IterableIterator<*>}
  */
-function* updateSellerLogoSaga({ payload }) {
+function* updateUserLogoSaga({ payload }) {
   try {
-    const { data, cb } = payload;
+    const { data, cb, user } = payload;
     // const userID = yield select(userIdSelector);
-    const formData = new FormData();
-    formData.append('logo', "kudfhdu")
-    const uploadLogo = yield call(updateSellerLogo, { logo: data });
+    const key = user?.user_type === 'SELLER' ? 'logo' : 'image'
+    const uploadLogo = yield call(user?.user_type === 'SELLER' ? updateSellerLogo : uploadCustomerLogo,
+      { [key]: data });
     yield put({
-      type: Actions.UPDATE_SELLER_LOGO_SUCCESS,
+      type: Actions.UPDATE_USER_LOGO_SUCCESS,
     });
     yield call(showMessage, {
       message: 'Update success',
       type: 'success',
     });
     yield call(() => {
-      cb(uploadLogo?.data?.logo)
+      cb(uploadLogo?.data[key] || undefined)
     });
   } catch (e) {
     yield put({
-      type: Actions.UPDATE_SELLER_LOGO_ERROR,
+      type: Actions.UPDATE_USER_LOGO_ERROR,
     });
     yield call(showMessage, {
       message: e.message,
@@ -769,5 +770,5 @@ export default function* authSaga() {
   yield takeEvery(Actions.SIGN_IN_WITH_OTP, signInWithOtpSaga);
   yield takeEvery(Actions.SIGN_UP_WITH_OTP, signUpWithOtplSaga);
   yield takeEvery(Actions.GET_LIST_FILE_DOWNLOAD, getFilesDownloadCustomer);
-  yield takeEvery(Actions.UPDATE_SELLER_LOGO, updateSellerLogoSaga);
+  yield takeEvery(Actions.UPDATE_USER_LOGO, updateUserLogoSaga);
 }

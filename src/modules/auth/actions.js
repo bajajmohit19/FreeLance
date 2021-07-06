@@ -13,16 +13,16 @@ export function signInWithEmail({ username, password }) {
     password,
   };
 }
-export function becomeASeller(data, cb = () => {}) {
+export function becomeASeller(data, cb = () => { }) {
   return {
     type: Actions.BECOME_A_SELLER,
-    payload: {data, cb}
+    payload: { data, cb }
   };
 }
 export function updateSeller(data) {
   return {
     type: Actions.UPDATE_SELLER,
-    payload : data
+    payload: data
   };
 }
 
@@ -121,7 +121,7 @@ export function isLogin() {
  * @param cb
  * @returns {{type: string, payload: { cb: *}}}
  */
-export function getSellerDetails(cb = () => {}) {
+export function getSellerDetails(cb = () => { }) {
   return {
     type: Actions.GET_SELLER_DETAILS,
     cb
@@ -292,19 +292,19 @@ export function getFilesDonwload() {
  * @param data
  * @returns {{type: string, payload: {data: *, cb: *}}}
  */
-export function updateSellerLogo(data, cb = () => { }) {
+export function updateUserLogo(data, cb = () => { }) {
   return {
-    type: Actions.UPDATE_SELLER_LOGO,
+    type: Actions.UPDATE_USER_LOGO,
     payload: {
-      data,
+      ...data,
       cb,
     },
   };
 }
 
 
-export function updateSellerLogoSuccess() {
+export function updateUserLogoSuccess() {
   return {
-    type: Actions.UPDATE_SELLER_LOGO_SUCCESS
+    type: Actions.UPDATE_USER_LOGO_SUCCESS
   };
 }
