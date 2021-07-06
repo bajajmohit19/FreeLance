@@ -8,6 +8,7 @@ import ItemCategoryMenu from './ItemCategoryMenu';
 
 import {categorySelector} from 'src/modules/category/selectors';
 import {configsSelector, languageSelector} from 'src/modules/common/selectors';
+import { authSelector} from 'src/modules/auth/selectors';
 import {padding, margin} from 'src/components/config/spacing';
 
 import {homeTabs, mainStack} from 'src/config/navigator';
@@ -25,8 +26,8 @@ class Sidebar extends React.Component {
   };
 
   render() {
-    const {t, category, configs, language, navigation} = this.props;
-    const dataHelpInfo = [
+    const {t, category, configs, language, navigation, auth} = this.props;
+    const dataHelpInfoSeller = [
       {
         id: '1',
         name: t('common:text_home'),
@@ -37,7 +38,7 @@ class Sidebar extends React.Component {
       },
       {
         id: '2',
-        name: 'Become a Seller',
+        name: 'Update Seller' ,
         router: mainStack.become_a_seller,
       
       },
@@ -68,9 +69,9 @@ class Sidebar extends React.Component {
       },
       {
         id: '7',
-        name: 'common:show_biz',
+        name:  'common:show_biz',
         router: mainStack.show_biz,
-      },
+      } ,
       {
         id: '8',
         name: 'common:qr_code',
@@ -81,20 +82,68 @@ class Sidebar extends React.Component {
         name: 'common:wallet',
         router: mainStack.wallet,
       },
+    ]
+    const dataHelpInfo = [
+      {
+        id: '1',
+        name: t('common:text_home'),
+        router: mainStack.home_tab,
+        params: {
+          screen: homeTabs.home_drawer,
+        },
+      },
+      {
+        id: '2',
+        name:  'Become A Seller',
+        router: mainStack.become_a_seller,
+      
+      },
+     
+      {
+        id: '3',
+        name: t('common:text_about'),
+        router: mainStack.page,
+        params: {
+          id: configs.getIn(['about', language]),
+          type: 'page',
+        },
+      },
+     
+      {
+        id: '5',
+        name: t('common:text_privacy_full'),
+        router: mainStack.page,
+        params: {
+          id: configs.getIn(['policy', language]),
+          type: 'page',
+        },
+      },
+      {
+        id: '6',
+        name: 'common:text_contact',
+        router: mainStack.contact,
+      },
+     
+  
+      {
+        id:  '7' ,
+        name: 'common:wallet',
+        router: mainStack.wallet,
+      },
     ];
 
     const {data} = category;
 
     // Filter include category
     const _data = excludeCategory(data, exclude_categories_sidebar);
-
+    console.log(auth)
     return (
       <ThemedView isFullView>
         <ScrollView>
         
         <HeaderMe />
        
-          {dataHelpInfo.map((value) => (
+          {auth?.user?.user_type == 'SELLER' ?  dataHelpInfoSeller.map((value) => (
             <ListItem
               key={value.id}
               title={t(value.name)}
@@ -106,7 +155,18 @@ class Sidebar extends React.Component {
               containerStyle={styles.item}
               onPress={() => this.handlePage(value.router, value.params)}
             />
-          ))}
+          ))  :  dataHelpInfo.map((value) => (
+            <ListItem
+              key={value.id}
+              title={t(value.name)}
+              titleProps={{
+                medium: true,
+              }}
+              type="underline"
+              small
+              containerStyle={styles.item}
+              onPress={() => this.handlePage(value.router, value.params)}
+            />))}
         </ScrollView>
       </ThemedView>
     );
@@ -131,5 +191,6 @@ const mapStateToProps = (state) => ({
   category: categorySelector(state),
   configs: configsSelector(state),
   language: languageSelector(state),
+  auth: authSelector(state)
 });
 export default connect(mapStateToProps)(withTranslation()(Sidebar));

@@ -87,7 +87,6 @@ const HeaderMe = (props) => {
   }
 
   const saveDataUser = (logoUrl) => {
-    console.log("logooo",logoUrl)
     const { dispatch } = props;
 
     dispatch(
@@ -96,7 +95,6 @@ const HeaderMe = (props) => {
       }),
     );
   };
-  console.log("USEr",user)
   const captureImage = async (type = 'photo') => {
     const options = {
       title: 'Select Shop Logo',
@@ -174,8 +172,8 @@ const HeaderMe = (props) => {
     <ListItem
       title={nameUser}
       leftAvatar={{
-        source: user?.logo
-          ? { uri: user?.logo }
+        source: user?.user_type == 'SELLER'  
+          ? { uri: user?.seller?.logo } : user?.user_type !== 'SELLER' ? { uri: user?.logo } 
           : require('src/assets/images/pDefault.png'),
         size: 60,
         rounded: true,

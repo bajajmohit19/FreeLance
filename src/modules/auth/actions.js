@@ -13,10 +13,10 @@ export function signInWithEmail({ username, password }) {
     password,
   };
 }
-export function becomeASeller(data) {
+export function becomeASeller(data, cb = () => {}) {
   return {
     type: Actions.BECOME_A_SELLER,
-    payload: data
+    payload: {data, cb}
   };
 }
 export function updateSeller(data) {

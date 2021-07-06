@@ -45,16 +45,10 @@ function Seller({ t }) {
         console.log("Upload Image")
     }
     useEffect(() => {
-        AsyncStorage.getItem('isSeller').then((d) => {
-            if (d == 'SELLER') {
-                setSeller(true)
-                getSellerDetails1()
-            }
-        }).catch(e => {
-            console.log("Not Seller", e)
-
-        })
-
+        if(auth?.user.user_type == 'SELLER') {
+            setSeller(true)
+            getSellerDetails1()
+        }
     }, [])
     useEffect(() => {
         setState((prev) => ({ ...prev, first_name:sellerData?.seller_name, shop_name:sellerData?.shop_name, address1:sellerData?.addressEnc?.address1,address2:sellerData?.addressEnc?.address2, postcode:sellerData?.addressEnc?.postcode, city:sellerData?.addressEnc?.city, state: sellerData?.addressEnc?.state  }))
