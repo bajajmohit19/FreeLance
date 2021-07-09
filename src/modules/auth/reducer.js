@@ -8,6 +8,7 @@ import { shippingAddressInit, billingAddressInit, errorInit as initError } from 
 const initState = fromJS({
   isLogin: false,
   pending: false,
+  pendingAddProduct: false,
   pendingMobile: false,
   pendingGoogle: false,
   pendingFacebook: false,
@@ -84,6 +85,12 @@ export default function authReducer(state = initState, action = {}) {
       return state.set('pending', true).set('signUpError', fromJS(initError));
     case Actions.SIGN_UP_WITH_EMAIL_SUCCESS:
       return state.set('pending', false);
+    case Actions.ADD_PRODUCT:
+      return state.set('pendingAddProduct', true)
+    // case Actions.ADD_PRODUCT_LOADING_TRUE:
+    //   return state.set('pendingAddProduct', true)
+    case Actions.ADD_PRODUCT_LOADING_FALSE:
+      return state.set('pendingAddProduct', false)
     case Actions.SIGN_UP_WITH_EMAIL_ERROR:
       const errorSignUp = notificationMessage(action.payload);
       return state

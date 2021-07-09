@@ -125,7 +125,6 @@ function* doLoginSuccess(token, user = {}, method = 'email') {
  */
 function* signInWithEmailSaga({ username, password }) {
   try {
-    console.log(username, password)
     const language = yield select(languageSelector);
     const { data, err, message, status } = yield call(loginWithEmail, {
       username,
@@ -372,7 +371,6 @@ function* signUpWithEmailSaga({ payload }) {
     const signupData = yield call(registerWithEmail, data);
 
     if (signupData?.status === 409 || signupData?.status === 422 || signupData?.status === 500) {
-      console.log(signupData)
       yield call(showMessage, {
         message: signupData?.message,
         type: 'info',
@@ -414,35 +412,42 @@ function* addProductSaga({ payload }) {
   try {
     const { data } = payload;
     const language = yield select(languageSelector);
-    const signupData = yield call(addProduct, data);
-
-    if (signupData?.status === 409 || signupData?.status === 422 || signupData?.status === 500) {
+    const { data1, error, message, status } = yield call(addProduct, data);
+  
+    console.log("product", data1, error, message, status)
+    if (status === 409 || status === 422) {
+      console.log("innn")
       yield call(showMessage, {
-        message: signupData?.message,
+        description: message?.poduct_name  || message?.description || message?.image || message?.product_images || message?.additional_info && 'Please Fill required fields',
+        message: 'Please Fill Required Fields',
         type: 'info',
       });
       yield put({
-        type: Actions.SIGN_UP_WITH_EMAIL_ERROR,
+        type: Actions.ADD_PRODUCT_LOADING_FALSE,
         payload: {
-          message: signupData?.message,
+          message: message,
         },
+      });
+    } else if (status === 500) {
+      yield call(showMessage, {
+        message: 'Oops Something went wrong',
+        type: 'error',
       });
     }
     else {
       yield call(showMessage, {
-        message: signupData?.message,
+        message: message,
         type: 'success',
       });
       yield put({
-        type: Actions.SIGN_UP_WITH_EMAIL_SUCCESS,
+        type: Actions.ADD_PRODUCT_LOADING_FALSE,
       });
-      yield call(doLoginSuccess, signupData?.data?.access_token, signupData?.data, 'otp');
 
     }
   } catch (e) {
     yield call(handleError, e);
     yield put({
-      type: Actions.SIGN_UP_WITH_EMAIL_ERROR,
+      type: Actions.ADD_PRODUCT_LOADING_FALSE,
       payload: {
         message: e.message,
       },

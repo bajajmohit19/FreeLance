@@ -11,7 +11,8 @@ import {
     Switch,
     KeyboardAvoidingView,
     Platform,
-    PermissionsAndroid
+    PermissionsAndroid,
+    Dimensions
 } from 'react-native';
 import {
     Header,
@@ -151,7 +152,8 @@ class AddProduct extends React.Component {
                     // let source = {
                     //   uri: 'data:image/jpeg;base64,' + response.data
                     // };
-                    this.setState({ data: { ...this.state.data, [field_name]: field_name == 'product_images' ? [response?.data] : response?.data } })
+                    let newArr = this.state.data.product_images.concat(response?.data)
+                    this.setState({ data: { ...this.state.data, [field_name]: field_name == 'product_images' ? newArr : response?.data } })
                 }
             });
         }
@@ -173,7 +175,6 @@ class AddProduct extends React.Component {
 
     }
     handleRegister = async () => {
-        console.log("call")
         this.setState({
             loading: true,
         });
@@ -195,7 +196,7 @@ class AddProduct extends React.Component {
     render() {
         const {
             navigation,
-            auth: { pending, pendingRegisterOreoUser },
+            auth: { pending, pendingRegisterOreoUser, pendingAddProduct },
             enablePhoneNumber,
             t,
         } = this.props;
@@ -222,122 +223,142 @@ class AddProduct extends React.Component {
             confirmResult,
         } = this.state;
         const visible = visibleModal || !!(!user && confirmResult);
-        console.log(pendingRegisterOreoUser, pending)
         return (
             <ThemeConsumer>
                 {({ theme }) => (
                     <ThemedView isFullView>
-                        <Loading visible={pending} />
+                        <Loading visible={pendingAddProduct} />
                         <Header
                             leftComponent={<IconHeader />}
                             centerComponent={<TextHeader title={t('profile:add_product')} />}
                         />
                         <KeyboardAvoidingView behavior="height" style={styles.keyboard}>
-                            <ScrollView>
-                                <Container>
+                            <ScrollView >
+                                <Container >
                                     {message ? (
                                         <TextHtml
                                             value={message}
                                             style={changeColor(theme.colors.error)}
                                         />
                                     ) : null}
-                                    <Input
-                                        label={t('profile:product_name')}
-                                        value={product_name}
-                                        onChangeText={(value) =>
-                                            this.changeData({ product_name: value })
-                                        }
-                                        error={errors && errors.product_name}
-                                    />
-                                    <Input
-                                        label={t('profile:category_id')}
-                                        value={category_id}
-                                        onChangeText={(value) =>
-                                            this.changeData({ category_id: value })
-                                        }
-                                        error={errors && errors.category_id}
-                                    />
-                                    <Input
-                                        label={t('profile:additional_info')}
-                                        value={additional_info}
-                                        onChangeText={(value) => this.changeData({ additional_info: value })}
-                                        error={errors && errors.additional_info}
-                                    />
-                                    <Input
-                                        label={t('profile:short_description')}
-                                        value={short_description}
-                                        onChangeText={(value) => this.changeData({ short_description: value })}
-                                        error={errors && errors.short_description}
-                                    />
-                                    <Input
-                                        label={t('profile:description')}
-                                        value={description}
-                                        onChangeText={(value) => this.changeData({ description: value })}
-                                        error={errors && errors.description}
-                                    />
-                                    <Input
-                                        keyboardType={'number-pad'}
-                                        label={t('profile:total_quantity')}
-                                        value={total_quantity}
-                                        onChangeText={(value) => this.changeData({ total_quantity: value })}
-                                        error={errors && errors.total_quantity}
-                                    />
-                                    <Input
-                                        keyboardType={'number-pad'}
-                                        label={t('profile:original_price')}
-                                        value={original_price}
-                                        onChangeText={(value) => this.changeData({ original_price: value })}
-                                        error={errors && errors.original_price}
-                                    />
-                                    <Input
-                                        keyboardType={'number-pad'}
-                                        label={t('profile:discount_price')}
-                                        value={discount_price}
-                                        onChangeText={(value) => this.changeData({ discount_price: value })}
-                                        error={errors && errors.discount_price}
-                                    />
+                                    <View style={{ display: 'flex', flexDirection: 'column', justifyContent: 'space-between', height: Dimensions.get('screen').height * 0.8 }}>
+                                        <ScrollView >
+                                            <Input
+                                                label={t('profile:product_name')}
+                                                value={product_name}
+                                                onChangeText={(value) =>
+                                                    this.changeData({ product_name: value })
+                                                }
+                                                error={errors && errors.product_name}
+                                            />
+                                            <Input
+                                                label={t('profile:category_id')}
+                                                value={category_id}
+                                                onChangeText={(value) =>
+                                                    this.changeData({ category_id: value })
+                                                }
+                                                error={errors && errors.category_id}
+                                            />
+                                            <Input
+                                                label={t('profile:additional_info')}
+                                                value={additional_info}
+                                                onChangeText={(value) => this.changeData({ additional_info: value })}
+                                                error={errors && errors.additional_info}
+                                            />
+                                            <Input
+                                                label={t('profile:short_description')}
+                                                value={short_description}
+                                                onChangeText={(value) => this.changeData({ short_description: value })}
+                                                error={errors && errors.short_description}
+                                            />
+                                            <Input
+                                                label={t('profile:description')}
+                                                value={description}
+                                                onChangeText={(value) => this.changeData({ description: value })}
+                                                error={errors && errors.description}
+                                            />
+                                            <Input
+                                                keyboardType={'number-pad'}
+                                                label={t('profile:total_quantity')}
+                                                value={total_quantity}
+                                                onChangeText={(value) => this.changeData({ total_quantity: value })}
+                                                error={errors && errors.total_quantity}
+                                            />
+                                            <Input
+                                                keyboardType={'number-pad'}
+                                                label={t('profile:original_price')}
+                                                value={original_price}
+                                                onChangeText={(value) => this.changeData({ original_price: value })}
+                                                error={errors && errors.original_price}
+                                            />
+                                            <Input
+                                                keyboardType={'number-pad'}
+                                                label={t('profile:discount_price')}
+                                                value={discount_price}
+                                                onChangeText={(value) => this.changeData({ discount_price: value })}
+                                                error={errors && errors.discount_price}
+                                            />
 
-                                    <View style={styles.addButton}>
-                                        <View style={styles.avtar}>
-                                            <Avtar
-                                                renderPlaceholderContent={<Text>Product Image</Text>}
-                                               
-                                                source={this.state.data?.image
-                                                    ? { uri: `data:image/png;base64, ${this.state.data?.image}` }
-                                                    : require('src/assets/images/pDefault.png')}
-                                                size={60}
-                                                rounded={true}
-                                                showEditButton
-                                                onPress={() => this.captureImage('photo', 'image')}
+                                            <View style={styles.addButton}>
+                                                <View style={styles.avtar}>
+                                                    <Text>Product Image</Text>
+                                                    <Avtar
+                                                        renderPlaceholderContent={<Text>Product Image</Text>}
+
+                                                        source={this.state.data?.image
+                                                            ? { uri: `data:image/png;base64, ${this.state.data?.image}` }
+                                                            : require('src/assets/images/pDefault.png')}
+                                                        size={60}
+                                                        rounded={true}
+                                                        showEditButton
+                                                        onPress={() => this.captureImage('photo', 'image')}
+                                                    />
+                                                </View>
+                                                <Text>Product Images</Text>
+                                                <View style={{display:'flex', flexDirection:'row', }}>
+                                                    {this.state.data?.product_images.length ?
+                                                        this.state.data.product_images.map(image => 
+                                                            <Avtar
+                                                                renderPlaceholderContent={<Text>Product Images</Text>}
+
+                                                                source={
+                                                                         { uri: `data:image/png;base64, ${image}` }
+                                                                    }
+                                                                size={60}
+                                                                showEditButton
+                                                                rounded={true}
+                                                                onPress={() => this.captureImage('photo', 'product_images')}
+                                                            />
+                                                        ) : null
+                                                    }
+                                                  {this.state.data.product_images.length <= 4 ?  
+                                                  <Avtar
+                                                        renderPlaceholderContent={<Text>Product Images</Text>}
+
+                                                        source={
+                                                                require('src/assets/images/pDefault.png')}
+                                                        size={60}
+                                                        showEditButton
+                                                        rounded={true}
+                                                        onPress={() => this.captureImage('photo', 'product_images')}
+                                                    /> : null}
+                                                </View>
+
+                                            </View>
+                                        </ScrollView>
+                                        <View >
+
+                                            <Button
+                                                title={t('profile:add_product')}
+                                                onPress={this.handleRegister}
+                                                loading={pendingAddProduct}
                                             />
                                         </View>
-                                        <View>
-                                            <Avtar
-                                                renderPlaceholderContent={<Text>Product Images</Text>}
-
-                                                source={
-                                                    this.state.data?.product_images.length
-                                                        ? { uri: `data:image/png;base64, ${this.state.data?.product_images[0]}` }
-                                                        :
-                                                        require('src/assets/images/pDefault.png')}
-                                                size={60}
-                                                showEditButton
-                                                rounded={true}
-                                                onPress={() => this.captureImage('photo', 'product_images')}
-                                            />
-                                        </View>
-
                                     </View>
 
 
-                                    <View
-                                    >
-                                        <Button
-                                            title={t('profile:add_product')}
-                                            onPress={this.handleRegister}
-                                            loading={pending}
-                                        />
-                                    </View>
+
+
 
 
 
@@ -368,7 +389,7 @@ const styles = StyleSheet.create({
         marginRight: margin.large,
     },
     addButton: {
-        display: 'flex', flexDirection: 'row', padding: 4
+        display: 'flex', flexDirection: 'column', padding: 4
     },
     viewAccount: {
         marginVertical: margin.big,

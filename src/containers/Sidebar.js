@@ -136,7 +136,6 @@ class Sidebar extends React.Component {
 
     // Filter include category
     const _data = excludeCategory(data, exclude_categories_sidebar);
-    console.log(auth)
     return (
       <ThemedView isFullView>
         <ScrollView>
