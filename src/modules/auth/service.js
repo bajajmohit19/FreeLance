@@ -17,6 +17,9 @@ export const registerWithEmail = (inputData) =>
 export const addProduct = (inputData) =>
   request.post(configApi.products, inputData);
 
+export const getCategories = (inputData) =>
+  request.get1(configApi.categoryList, inputData);
+
 export const becomeASeller = (inputData) =>
   request.update(configApi.addSeller, inputData);
 

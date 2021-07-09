@@ -59,6 +59,12 @@ export function addProduct(data) {
     },
   };
 }
+export function getCategories(cb = () => { }) {
+  return {
+    type: Actions.GET_CATEGORY_LIST,
+    cb
+  };
+}
 
 /**
  * Login with google

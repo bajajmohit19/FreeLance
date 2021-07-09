@@ -6,6 +6,7 @@ import { notificationMessage } from 'src/utils/error';
 import { shippingAddressInit, billingAddressInit, errorInit as initError } from './config';
 
 const initState = fromJS({
+  categoryListLoader: false,
   isLogin: false,
   pending: false,
   pendingAddProduct: false,
@@ -59,6 +60,15 @@ export default function authReducer(state = initState, action = {}) {
     case Actions.BECOME_A_SELLER_SUCCESS:
       return state
         .set('isSeller', true)
+    case Actions.CATEGORY_LIST_LOADER:
+      return state.set('categoryListLoader', true)
+    case Actions.CATEGORY_LIST_LOADER_SUCCESS:
+      return state.set('categoryListLoader', false)
+    case Actions.CATEGORY_LIST_LOADER_ERROR:
+      return state.set('categoryListLoader', false)
+    case Actions.CATEGORY_LIST_SUCCESS:
+      return state
+        .set('categoryList', action?.payload);
     case Actions.SIGN_IN_WITH_EMAIL_ERROR:
       const errorSignIn = notificationMessage(action.payload);
       return state.set('pending', false).set('loginError', fromJS(errorSignIn));
@@ -144,6 +154,7 @@ export default function authReducer(state = initState, action = {}) {
     case Actions.GET_SELLER_DETAILS_SUCCESS:
       return state
         .set('sellerData', action?.payload);
+
     case Actions.GET_CUSTOMER_ERROR:
       return state.set('pendingGetCustomer', false);
     case Actions.UPDATE_CUSTOMER:

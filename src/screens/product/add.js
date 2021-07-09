@@ -12,7 +12,8 @@ import {
     KeyboardAvoidingView,
     Platform,
     PermissionsAndroid,
-    Dimensions
+    Dimensions,
+    Picker
 } from 'react-native';
 import {
     Header,
@@ -27,7 +28,7 @@ import Input from 'src/containers/input/Input';
 import InputMobile from 'src/containers/input/InputMobile';
 import TextHtml from 'src/containers/TextHtml';
 import { TextHeader, IconHeader } from 'src/containers/HeaderComponent';
-import { addProduct } from 'src/modules/auth/actions';
+import { addProduct, getCategories } from 'src/modules/auth/actions';
 import { authSelector } from 'src/modules/auth/selectors';
 import { configsSelector, languageSelector } from 'src/modules/common/selectors';
 import { checkPhoneNumber } from 'src/modules/auth/service';
@@ -114,7 +115,7 @@ class AddProduct extends React.Component {
         this.confirmation = null;
     }
     componentDidMount() {
-
+        this.props.dispatch(getCategories())
     }
 
     componentWillUnmount() {
@@ -196,10 +197,11 @@ class AddProduct extends React.Component {
     render() {
         const {
             navigation,
-            auth: { pending, pendingRegisterOreoUser, pendingAddProduct },
+            auth: { pending, pendingRegisterOreoUser, pendingAddProduct, categoryList, categoryListLoader },
             enablePhoneNumber,
             t,
         } = this.props;
+        console.log(categoryList[0]?.categories)
         const {
             data: {
                 email,
@@ -251,7 +253,18 @@ class AddProduct extends React.Component {
                                                 }
                                                 error={errors && errors.product_name}
                                             />
+                                            {/* <Text>Category-Id</Text> */}
+                                            {/* <View style={{ borderWidth: 1, borderColor: '#BDBDBD', borderRadius: 4 }}>
+                                                <Picker selectedValue={category_id} onValueChange={(value) => 
+                                                    this.changeData({ category_id: value })
+
+                                                } >
+                                                    <Picker.Item label="jave" value="java" />
+                                                </Picker>
+                                            </View> */}
+
                                             <Input
+                                                type={'select'}
                                                 label={t('profile:category_id')}
                                                 value={category_id}
                                                 onChangeText={(value) =>
@@ -315,15 +328,15 @@ class AddProduct extends React.Component {
                                                     />
                                                 </View>
                                                 <Text>Product Images</Text>
-                                                <View style={{display:'flex', flexDirection:'row', }}>
+                                                <View style={{ display: 'flex', flexDirection: 'row', }}>
                                                     {this.state.data?.product_images.length ?
-                                                        this.state.data.product_images.map(image => 
+                                                        this.state.data.product_images.map(image =>
                                                             <Avtar
                                                                 renderPlaceholderContent={<Text>Product Images</Text>}
 
                                                                 source={
-                                                                         { uri: `data:image/png;base64, ${image}` }
-                                                                    }
+                                                                    { uri: `data:image/png;base64, ${image}` }
+                                                                }
                                                                 size={60}
                                                                 showEditButton
                                                                 rounded={true}
@@ -331,17 +344,17 @@ class AddProduct extends React.Component {
                                                             />
                                                         ) : null
                                                     }
-                                                  {this.state.data.product_images.length <= 4 ?  
-                                                  <Avtar
-                                                        renderPlaceholderContent={<Text>Product Images</Text>}
+                                                    {this.state.data.product_images.length <= 4 ?
+                                                        <Avtar
+                                                            renderPlaceholderContent={<Text>Product Images</Text>}
 
-                                                        source={
+                                                            source={
                                                                 require('src/assets/images/pDefault.png')}
-                                                        size={60}
-                                                        showEditButton
-                                                        rounded={true}
-                                                        onPress={() => this.captureImage('photo', 'product_images')}
-                                                    /> : null}
+                                                            size={60}
+                                                            showEditButton
+                                                            rounded={true}
+                                                            onPress={() => this.captureImage('photo', 'product_images')}
+                                                        /> : null}
                                                 </View>
 
                                             </View>

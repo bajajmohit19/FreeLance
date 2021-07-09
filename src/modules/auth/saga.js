@@ -17,6 +17,7 @@ import {
   loginWithMobile,
   registerWithEmail,
   addProduct,
+  getCategories,
   loginWithGoogle,
   loginWithFacebook,
   changeEmail,
@@ -282,6 +283,34 @@ function* getSellerDataSaga({ payload }) {
     console.log("error", e)
     yield put({
       type: Actions.REGISTER_OREO_USER_ERROR,
+
+    });
+  }
+}
+function* getCategoryList({ payload }) {
+  try {
+    yield put({
+      type: Actions.CATEGORY_LIST_LOADER,
+
+    });
+    const seller = yield call(getCategories);
+
+    yield put({
+      type: Actions.CATEGORY_LIST_SUCCESS,
+      payload: seller?.data
+
+    });
+    yield put({
+      type: Actions.CATEGORY_LIST_LOADER_SUCCESS,
+
+    });
+    if (payload?.cb) {
+      yield call(payload?.cb, seller);
+    }
+  } catch (e) {
+    console.log("error", e)
+    yield put({
+      type: Actions.CATEGORY_LIST_LOADER_ERROR,
 
     });
   }
@@ -756,6 +785,7 @@ function* updateUserLogoSaga({ payload }) {
 export default function* authSaga() {
   yield takeEvery(Actions.BECOME_A_SELLER, becomeSeller)
   yield takeEvery(Actions.ADD_PRODUCT, addProductSaga)
+  yield takeEvery(Actions.GET_CATEGORY_LIST, getCategoryList)
   yield takeEvery(Actions.UPDATE_SELLER, updateSellerData)
   yield takeEvery(Actions.GET_SELLER_DETAILS, getSellerDataSaga)
   yield takeEvery(Actions.SIGN_IN_WITH_EMAIL, signInWithEmailSaga);

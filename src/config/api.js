@@ -17,4 +17,5 @@ export default {
   products: NEWAPI + 'products/add',
   uploadSellerLogo : NEWAPI + 'seller/upload-logo',
   uploadCustomerLogo : NEWAPI + 'profile/upload-image',
+  categoryList: NEWAPI + 'utilities/get-category-list'
 };
