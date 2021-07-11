@@ -76,14 +76,12 @@ class Vendors extends Component {
   };
 
   clickDetailVendor = (data) => {
-    console.log("data", data)
     const { dispatch, navigation, productsByVendors } = this.props;
     const  payload = {
       seller_id: data?.seller_enc_id,
       page: 1,
       limit: 5
     }
-    console.log(payload)
     dispatch(getProductByVendor(payload));
     navigation.navigate(mainStack.store_detail, {vendorDetail:productsByVendors});
   };

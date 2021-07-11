@@ -40,7 +40,6 @@ class LoginScreen extends React.Component {
 
   handleLogin = () => {
     const { username, password } = this.state;
-    console.log(username, password)
     this.props.dispatch(signInWithEmail({ username, password }));
   };
 
@@ -53,7 +52,6 @@ class LoginScreen extends React.Component {
     } = this.props;
     const { username, password } = this.state;
     const { message, errors } = loginError;
-    console.log("pending",pending)
     return (
       <ThemeConsumer>
         {({ theme }) => (

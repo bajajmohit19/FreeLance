@@ -78,7 +78,6 @@ class CategoryList extends Component {
     } = this.props;
     const { data } = this.state
 
-    console.log("aaa", homeCategories)
 
     if (
       !fields ||

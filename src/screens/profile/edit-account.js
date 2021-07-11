@@ -23,18 +23,23 @@ class EditAccount extends React.Component {
   componentDidMount() {
     this.props.dispatch(getUserDetails())
   }
-  componentWillMount() {
-    const { userDetails } = this.props
-    if (userDetails) this.setState({
-      data: {
-        first_name: userDetails ? userDetails?.first_name : '',
-        last_name: userDetails ? userDetails?.last_name : '',
-        email: userDetails ? userDetails?.email : '',
-        phone: userDetails ? userDetails?.phone : '',
-        username: userDetails ? userDetails?.username : '',
-        country_no: userDetails ? userDetails?.country_no : '',
-      }
-    })
+  
+  componentWillReceiveProps(nextProps) {
+    const { auth: { userDetails } } = this.props
+
+    if (nextProps?.auth?.userDetails != userDetails) {
+      this.setState({
+        data: {
+          first_name: userDetails ? userDetails?.first_name :'',
+          last_name: userDetails ? userDetails?.last_name : '',
+          email: userDetails ? userDetails?.email : '',
+          phone: userDetails ? userDetails?.phone : '',
+          username: userDetails ? userDetails?.username : '',
+          country_no: userDetails ? userDetails?.country_no : '',
+        }
+      })
+
+    }
   }
   constructor(props) {
     super(props);
@@ -43,12 +48,12 @@ class EditAccount extends React.Component {
     } = props;
     this.state = {
       data: {
-        first_name: userDetails ? userDetails?.first_name : '',
-        last_name: userDetails ? userDetails?.last_name : '',
-        email: userDetails ? userDetails?.email : '',
-        phone: userDetails ? userDetails?.phone : '',
-        username: userDetails ? userDetails?.username : '',
-        country_no: userDetails ? userDetails?.country_no : '',
+        first_name: '',
+        last_name: '',
+        email: '',
+        phone: '',
+        username: '',
+        country_no: '',
       },
       errors: null,
     };
@@ -95,13 +100,14 @@ class EditAccount extends React.Component {
     });
   }
   render() {
+    console.log("asdasd", userDetails)
     const {
       t,
       auth: { pendingUpdateCustomer, userDetails, userDetailsLoader },
     } = this.props;
     const { data, errors } = this.state;
     const { first_name, last_name, email, phone, country_code, username } = data;
-
+    console.log("details", userDetails)
     return (
       <ThemedView isFullView>
         <Loading visible={userDetailsLoader} />

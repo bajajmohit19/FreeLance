@@ -1,19 +1,27 @@
 import React from 'react';
-import {useTranslation} from 'react-i18next';
+import { useTranslation } from 'react-i18next';
 
-import {StyleSheet} from 'react-native';
-import {Text, ListItem} from 'src/components';
-import {grey4} from 'src/components/config/colors';
+import { useSelector } from 'react-redux'
+import { StyleSheet } from 'react-native';
+import { Text, ListItem } from 'src/components';
+import { grey4 } from 'src/components/config/colors';
 
-import {margin, padding} from 'src/components/config/spacing';
-import {mainStack} from 'src/config/navigator';
-import {icon, titleProps} from './config';
+import { margin, padding } from 'src/components/config/spacing';
+import { mainStack } from 'src/config/navigator';
+import { icon, titleProps } from './config';
+import { authSelector } from 'src/modules/auth/selectors';
 
-const InformationMe = ({isLogin, clickPage}) => {
-  const {t} = useTranslation();
+const InformationMe = ({ isLogin, clickPage }) => {
+  const { auth } = useSelector((state) => ({
+    auth: authSelector(state)
+
+  })
+  )
+  const { t } = useTranslation();
   if (!isLogin) {
     return null;
   }
+
   return (
     <>
       <Text medium style={styles.title}>
@@ -28,7 +36,7 @@ const InformationMe = ({isLogin, clickPage}) => {
         pad={padding.large}
         onPress={() => clickPage(mainStack.account)}
       />
-       <ListItem
+    {auth?.user?.user_type == 'SELLER' &&  <ListItem
         leftIcon={icon(4, 'info')}
         title={t('common:add_product')}
         type="underline"
@@ -36,7 +44,7 @@ const InformationMe = ({isLogin, clickPage}) => {
         chevron
         pad={padding.large}
         onPress={() => clickPage(mainStack.addProduct)}
-      />
+      />}
       <ListItem
         leftIcon={icon(1, 'info')}
         title={t('common:text_orders')}
@@ -82,6 +90,6 @@ const styles = StyleSheet.create({
 
 InformationMe.defaultProps = {
   isLogin: false,
-  clickPage: () => {},
+  clickPage: () => { },
 };
 export default InformationMe;

@@ -104,7 +104,7 @@ export const routerMainSelector = createSelector(
 );
 
 export const themeSelector = createSelector(rootCommon, (data) => {
-  console.log("!@!@",data.get('theme'))
+  // console.log("!@!@",data.get('theme'))
   return data.get('theme');
 });
 

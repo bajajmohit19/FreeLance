@@ -16,7 +16,6 @@ import { detailVendorSelector } from 'src/modules/vendor/selectors';
 
 function StoreDetail(props) {
   const { t, vendorDetail, auth: { vendorsList, productsByVenderLoader, productsByVendors }, ...rest } = props;
-  console.log("productbyvendors", productsByVendors)
   if (productsByVendors && productsByVendors.size < 1) {
     return (
       <ThemedView isFullView>
@@ -48,7 +47,6 @@ function StoreDetail(props) {
           {productsByVenderLoader
             ? <Loading visible={productsByVenderLoader} />
             : productsByVendors && productsByVendors?.productsList.map((item, index) => (
-              console.log("item", item),
               <ItemVendor
                 key={item?.product_enc_id}
                 type="secondary"

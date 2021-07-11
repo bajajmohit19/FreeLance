@@ -349,7 +349,6 @@ function* getCategoryList({ payload }) {
   }
 }
 function* getHomeVendors({ payload }) {
-  console.log("payload",payload)
   const { data } = payload
   try {
     yield put({
@@ -357,7 +356,6 @@ function* getHomeVendors({ payload }) {
 
     });
     const seller = yield call(getVendors, data);
-  console.log("array",seller?.data)
 
     yield put({
       type: Actions.HOME_VENDORS_SUCCESS,
@@ -385,7 +383,6 @@ function* getVendorProducts({ payload }) {
 
     });
     const seller = yield call(getProductsByVendor, data);
-  console.log("array",seller?.data)
 
     yield put({
       type: Actions.VENDORS_PRODUCTS_LIST_SUCCESS,
@@ -586,9 +583,7 @@ function* addProductSaga({ payload }) {
     const language = yield select(languageSelector);
     const { data1, error, message, status } = yield call(addProduct, data);
 
-    console.log("product", data1, error, message, status)
     if (status === 409 || status === 422) {
-      console.log("innn")
       yield call(showMessage, {
         description: message?.poduct_name || message?.description || message?.image || message?.product_images || message?.additional_info && 'Please Fill required fields',
         message: 'Please Fill Required Fields',
