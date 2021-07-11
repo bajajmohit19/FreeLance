@@ -1,7 +1,7 @@
 import React from 'react';
-import {connect} from 'react-redux';
-import {withTranslation} from 'react-i18next';
-import {StyleSheet, View, Dimensions, FlatList} from 'react-native';
+import { connect } from 'react-redux';
+import { withTranslation } from 'react-i18next';
+import { StyleSheet, View, Dimensions, FlatList } from 'react-native';
 import ButtonGroup from 'src/containers/ButtonGroup';
 import AboutStore from './About';
 
@@ -10,13 +10,13 @@ import ReviewsStore from 'src/screens/shop/store/ReviewsStore';
 import ContactStore from 'src/screens/shop/store/ContactStore';
 import TimeStore from 'src/screens/shop/store/TimeStore';
 
-import {detailVendorSelector} from 'src/modules/vendor/selectors';
+import { detailVendorSelector } from 'src/modules/vendor/selectors';
 
-import {VENDOR} from 'src/config/development';
+import { VENDOR } from 'src/config/development';
 
-import {padding, margin} from 'src/components/config/spacing';
+import { padding, margin } from 'src/components/config/spacing';
 
-const {width} = Dimensions.get('window');
+const { width } = Dimensions.get('window');
 
 class StoreDetail extends React.Component {
   constructor(props) {
@@ -25,9 +25,9 @@ class StoreDetail extends React.Component {
       visitCurrent: 0,
     };
   }
-  renderContent = ({item, index}) => {
-    const {navigation, vendorDetail, ...props} = this.props;
-    const {visitCurrent} = this.state;
+  renderContent = ({ item, index }) => {
+    const { navigation, vendorDetail, ...props } = this.props;
+    const { visitCurrent } = this.state;
     const ContentComponent = item.Component;
 
     return (
@@ -45,7 +45,7 @@ class StoreDetail extends React.Component {
 
   goTab = (index) => {
     if (this.flatListPayment) {
-      this.flatListPayment.scrollToIndex({animated: false, index});
+      this.flatListPayment.scrollToIndex({ animated: false, index });
       this.setState({
         visitCurrent: index,
       });
@@ -53,8 +53,8 @@ class StoreDetail extends React.Component {
   };
 
   render() {
-    const {t} = this.props;
-    const {visitCurrent} = this.state;
+    const { t } = this.props;
+    const { visitCurrent } = this.state;
 
     const dataTab = VENDOR === 'wcfm' ?
       [

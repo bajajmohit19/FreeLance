@@ -13,12 +13,13 @@ type Props = {
 
 function ItemVendor(props: Props) {
   const {type, store, style, onPress} = props;
-
   if (!store) {
     return null;
   }
 
   if (type === 'secondary') {
+  console.log("store")
+
     return (
       <ItemVendorSecondary store={store} style={style} onPress={onPress} />
     );

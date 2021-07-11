@@ -21,6 +21,12 @@ export const getCategories = (inputData) =>
 
   request.get1(configApi.categoryList, inputData);
 
+export const getHomeCategories = (inputData) =>
+  request.get1(configApi.homeCategories, inputData);
+
+export const getProductsByVendor = (inputData) =>
+  request.get1(configApi.productsByVendors, inputData);
+
 export const getVendors = (inputData) =>
   request.get1(configApi.homeVendorsList, inputData);
 
@@ -35,6 +41,9 @@ export const updateSeller = (inputData) =>
 
 export const getSellerData = (inputData) =>
   request.get1(configApi.getSeller, inputData);
+
+export const getUserDetail = (inputData) =>
+  request.get1(configApi.getUserDetail, inputData);
 
 export const updateCustomer = (data) =>
   request.update(configApi.update, data);

@@ -19,5 +19,8 @@ export default {
   uploadCustomerLogo : NEWAPI + 'profile/upload-image',
   categoryList: NEWAPI + 'utilities/get-category-list',
   homeVendorsList: NEWAPI + 'home/vendors',
-  homeNewArrivals: NEWAPI + 'home/new-arrivals'
+  homeNewArrivals: NEWAPI + 'home/new-arrivals',
+  homeCategories: NEWAPI + 'home/categories',
+  productsByVendors: NEWAPI + 'products/shop-products',
+  getUserDetail: NEWAPI + 'profile'
 };

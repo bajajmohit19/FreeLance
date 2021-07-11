@@ -65,9 +65,25 @@ export function getCategories(cb = () => { }) {
     cb
   };
 }
+export function getHomeCategories(data) {
+  return {
+    type: Actions.GET_HOME_CATEGORIES,
+    payload :{
+      data
+    }
+  };
+}
 export function getHomeVendors(data) {
   return {
     type: Actions.GET_HOME_VENDORS,
+    payload :{
+      data
+    }
+  };
+}
+export function getProductByVendor(data) {
+  return {
+    type: Actions.GET_PRODUCT_BY_VENDOR,
     payload :{
       data
     }
@@ -147,6 +163,12 @@ export function isLogin() {
 export function getSellerDetails(cb = () => { }) {
   return {
     type: Actions.GET_SELLER_DETAILS,
+    cb
+  };
+}
+export function getUserDetails(cb = () => { }) {
+  return {
+    type: Actions.GET_USER_DETAILS,
     cb
   };
 }

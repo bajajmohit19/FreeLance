@@ -16,7 +16,7 @@ import { mainStack } from 'src/config/navigator';
 import { languageSelector } from 'src/modules/common/selectors';
 import { authSelector } from 'src/modules/auth/selectors';
 import { getVendors } from 'src/modules/vendor/service';
-import { getHomeVendors } from 'src/modules/auth/actions';
+import { getHomeVendors, getProductByVendor } from 'src/modules/auth/actions';
 
 import { padding } from 'src/components/config/spacing';
 
@@ -76,9 +76,16 @@ class Vendors extends Component {
   };
 
   clickDetailVendor = (data) => {
-    const { dispatch, navigation } = this.props;
-    dispatch(fetchVendorDetailSuccess(data));
-    navigation.navigate(mainStack.store_detail);
+    console.log("data", data)
+    const { dispatch, navigation, productsByVendors } = this.props;
+    const  payload = {
+      seller_id: data?.seller_enc_id,
+      page: 1,
+      limit: 5
+    }
+    console.log(payload)
+    dispatch(getProductByVendor(payload));
+    navigation.navigate(mainStack.store_detail, {vendorDetail:productsByVendors});
   };
   renderLoading = (padEnd) => {
     const { limit } = this.state;
@@ -95,7 +102,7 @@ class Vendors extends Component {
     ));
   };
   render() {
-    const { navigation, fields, language, t, auth: { vendorsList, vendorListLoader},
+    const { navigation, fields, language, t, auth: { vendorsList, vendorListLoader, productsByVendors},
     } = this.props;
     const { data, loading } = this.state;
     if (

@@ -18,6 +18,7 @@ import { StyleSheet, ScrollView } from 'react-native';
 import Container from 'src/containers/Container';
 import Heading from 'src/containers/Heading';
 import Products from '../Products';
+import { padding } from 'src/components/config/spacing';
 import { authSelector } from 'src/modules/auth/selectors';
 import { getNewArrivals } from 'src/modules/auth/actions';
 import {
@@ -74,6 +75,7 @@ const valueLimit = (fields) => {
 class ProductList extends Component {
 
   constructor(props, context) {
+    const { fields } = props
     super(props, context);
     const type = getType(props.fields);
     const per_page = valueLimit(props.fields);
@@ -86,6 +88,10 @@ class ProductList extends Component {
       per_page,
       type,
       include: include,
+      limit:
+        fields && fields.limit && parseInt(fields.limit, 10)
+          ? parseInt(fields.limit, 10)
+          : 4,
     };
   }
 
@@ -120,41 +126,6 @@ class ProductList extends Component {
   };
 
   fetchData = () => {
-    // const { per_page, include } = this.state;
-
-    // const { language } = this.props;
-
-    // this.setState(
-    //   {
-    //     loading: true,
-    //   },
-    //   async () => {
-    //     try {
-    //       const query = {
-    //         lang: language,
-    //         status: 'publish',
-    //         include: take(include, per_page),
-    //         per_page,
-    //       };
-
-    //       // eslint-disable-next-line no-undef
-    //       this.abortController = new AbortController();
-
-    //       const data = await getProducts(query, {
-    //         signal: this.abortController.signal,
-    //       });
-
-    //       this.setState({
-    //         data,
-    //         loading: false,
-    //       });
-    //     } catch (error) {
-    //       this.setState({
-    //         loading: false,
-    //       });
-    //     }
-    //   },
-    // );
     this.props.dispatch(getNewArrivals({ city: 'ludhiana' }))
   };
 
@@ -165,7 +136,7 @@ class ProductList extends Component {
   }
 
   componentDidUpdate(prevProps) {
-    
+
     if (!isEqual(prevProps.fields, this.props.fields)) {
       const per_page = valueLimit(this.props.fields);
       const type = getType(this.props.fields);
@@ -197,7 +168,20 @@ class ProductList extends Component {
     const result = prepareProductItem(mapItem, currency, defaultCurrency, days);
     return result.toJS();
   };
-
+  renderLoading = (padEnd) => {
+    const { limit } = this.state;
+    const listData = Array.from(Array(limit)).map((arg, index) => index);
+    return listData.map((value) => (
+      <ItemVendorLoading
+        key={value}
+        type="secondary"
+        style={[
+          styles.viewItem,
+          value === listData.length - 1 && { marginRight: padEnd },
+        ]}
+      />
+    ));
+  };
   render() {
     const {
       navigation,
@@ -224,6 +208,8 @@ class ProductList extends Component {
 
 
     const headerDisable = !fields.boxed ? 'all' : 'none';
+    const padEnd = fields.boxed ? padding.large : 0;
+
 
     return (
       <>
@@ -266,7 +252,7 @@ class ProductList extends Component {
           // />
           <ScrollView horizontal showsHorizontalScrollIndicator={false}>
             {homeNewArrivalLoader
-              ? <Loading visible={homeNewArrivalLoader}/>
+              ? this.renderLoading(padEnd)
               : homeNewArrivals && homeNewArrivals.map((item, index) => (
                 <ItemVendor
                   key={item?.product_inc_id}
@@ -290,6 +276,12 @@ class ProductList extends Component {
 const styles = StyleSheet.create({
   header: {
     paddingTop: 0,
+  },
+  viewItem: {
+    marginRight: 10,
+  },
+  item: {
+    flex: 1,
   },
 });
 

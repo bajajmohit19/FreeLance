@@ -1,46 +1,62 @@
 import React from 'react';
-import {connect} from 'react-redux';
-import {showMessage} from 'react-native-flash-message';
+import { connect } from 'react-redux';
+import { showMessage } from 'react-native-flash-message';
 import omit from 'lodash/omit';
-import {withTranslation} from 'react-i18next';
+import { withTranslation } from 'react-i18next';
 
-import {StyleSheet, KeyboardAvoidingView, ScrollView} from 'react-native';
-import {ThemedView, Header} from 'src/components';
-import {TextHeader, IconHeader} from 'src/containers/HeaderComponent';
-import {INITIAL_COUNTRY} from 'src/config/config-input-phone-number';
+import { StyleSheet, KeyboardAvoidingView, ScrollView } from 'react-native';
+import { ThemedView, Header, Loading } from 'src/components';
+import { TextHeader, IconHeader } from 'src/containers/HeaderComponent';
+import { INITIAL_COUNTRY } from 'src/config/config-input-phone-number';
 import InputMobile from 'src/containers/input/InputMobile';
 import Container from 'src/containers/Container';
 import Input from 'src/containers/input/Input';
 import Button from 'src/containers/Button';
 
-import {authSelector} from 'src/modules/auth/selectors';
-import {updateCustomer, updateUserSuccess} from 'src/modules/auth/actions';
-import {validatorUpdateAccount} from 'src/modules/auth/validator';
+import { authSelector } from 'src/modules/auth/selectors';
+import { updateCustomer, updateUserSuccess, getUserDetails } from 'src/modules/auth/actions';
+import { validatorUpdateAccount } from 'src/modules/auth/validator';
 
-import {margin} from 'src/components/config/spacing';
+import { margin } from 'src/components/config/spacing';
 
 class EditAccount extends React.Component {
+  componentDidMount() {
+    this.props.dispatch(getUserDetails())
+  }
+  componentWillMount() {
+    const { userDetails } = this.props
+    if (userDetails) this.setState({
+      data: {
+        first_name: userDetails ? userDetails?.first_name : '',
+        last_name: userDetails ? userDetails?.last_name : '',
+        email: userDetails ? userDetails?.email : '',
+        phone: userDetails ? userDetails?.phone : '',
+        username: userDetails ? userDetails?.username : '',
+        country_no: userDetails ? userDetails?.country_no : '',
+      }
+    })
+  }
   constructor(props) {
     super(props);
     const {
-      auth: {user},
+      auth: { user, userDetails, userDetailsLoader },
     } = props;
     this.state = {
       data: {
-        first_name: user.first_name || '',
-        last_name: user.last_name || '',
-        email: user.email || '',
-        phone: user.phone,
-        username: user.username,
-        country_no: '',
+        first_name: userDetails ? userDetails?.first_name : '',
+        last_name: userDetails ? userDetails?.last_name : '',
+        email: userDetails ? userDetails?.email : '',
+        phone: userDetails ? userDetails?.phone : '',
+        username: userDetails ? userDetails?.username : '',
+        country_no: userDetails ? userDetails?.country_no : '',
       },
       errors: null,
     };
   }
 
   handleSaveCustomer = () => {
-    const {t, dispatch} = this.props;
-    const {data} = this.state;
+    const { t, dispatch } = this.props;
+    const { data } = this.state;
     const errors = validatorUpdateAccount(data);
     if (errors.size > 0) {
       this.setState({
@@ -58,8 +74,8 @@ class EditAccount extends React.Component {
     }
   };
   saveDataUser = () => {
-    const {dispatch} = this.props;
-    const {data} = this.state;
+    const { dispatch } = this.props;
+    const { data } = this.state;
     const user_email = data.email;
     dispatch(
       updateUserSuccess({
@@ -70,7 +86,7 @@ class EditAccount extends React.Component {
   };
 
   changeData(key, value) {
-    const {data} = this.state;
+    const { data } = this.state;
     this.setState({
       data: {
         ...data,
@@ -81,13 +97,15 @@ class EditAccount extends React.Component {
   render() {
     const {
       t,
-      auth: {pendingUpdateCustomer},
+      auth: { pendingUpdateCustomer, userDetails, userDetailsLoader },
     } = this.props;
-    const {data, errors} = this.state;
-    const {first_name, last_name, email, phone, country_code, username} = data;
+    const { data, errors } = this.state;
+    const { first_name, last_name, email, phone, country_code, username } = data;
 
     return (
       <ThemedView isFullView>
+        <Loading visible={userDetailsLoader} />
+
         <Header
           leftComponent={<IconHeader />}
           centerComponent={
@@ -116,7 +134,7 @@ class EditAccount extends React.Component {
                 error={errors && errors.email}
                 keyboardType="email-address"
               />
-               <Input
+              <Input
                 label={t('inputs:text_username')}
                 value={username}
                 onChangeText={(value) => this.changeData('username', value)}
@@ -126,7 +144,7 @@ class EditAccount extends React.Component {
               <InputMobile
                 value={phone}
                 initialCountry={INITIAL_COUNTRY}
-                onChangePhoneNumber={({value, code, isoCode}) =>
+                onChangePhoneNumber={({ value, code, isoCode }) =>
                   this.changeData({
                     phone: value,
                     country_no: code,
@@ -135,7 +153,7 @@ class EditAccount extends React.Component {
                 }
                 error={errors && errors.phone}
               />
-             
+
               <Button
                 title={t('common:text_save')}
                 containerStyle={styles.button}

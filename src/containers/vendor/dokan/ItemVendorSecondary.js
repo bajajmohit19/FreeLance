@@ -13,7 +13,8 @@ type Props = {
 
 const ItemSecondary = (props: Props) => {
   const {store, style, onPress} = props;
-  const {store_name, gravatar, rating} = store;
+  const {store_name, gravatar, rating, name} = store;
+  console.log("store",store)
   const Component = onPress ? TouchableOpacity : View;
   const componentProps = onPress ? {onPress} : {};
 
@@ -41,7 +42,8 @@ const ItemSecondary = (props: Props) => {
             containerStyle={styles.image}
           />
           <Text h5 medium style={styles.name}>
-            {store_name}
+            {console.log("category name",name, store_name)}
+            {/* {name? name : store_name ? store_name : null} */}
           </Text>
           <View style={styles.viewRating}>
             <Text h5 colorThird medium style={styles.textRating}>

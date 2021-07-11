@@ -38,7 +38,10 @@ import {
   updateSellerLogo,
   uploadCustomerLogo,
   getVendors,
-  getHomeNewArrivals
+  getHomeNewArrivals,
+  getHomeCategories,
+  getProductsByVendor,
+  getUserDetail
 } from './service';
 
 import { validatorForgotPassword, validatorChangePassword } from './validator';
@@ -289,6 +292,34 @@ function* getSellerDataSaga({ payload }) {
     });
   }
 }
+function* getUserDataSaga({ payload }) {
+  try {
+    yield put({
+      type: Actions.GET_USER_DETAIL_LOADER,
+
+    });
+    const seller = yield call(getUserDetail);
+
+    yield put({
+      type: Actions.GET_USER_DETAIL_SUCCESS,
+      payload: seller?.data
+
+    });
+    yield put({
+      type: Actions.GET_USER_DETAIL_LOADER_SUCCESS,
+
+    });
+    if (payload?.cb) {
+      yield call(payload?.cb, seller);
+    }
+  } catch (e) {
+    console.log("error", e)
+    yield put({
+      type: Actions.GET_USER_DETAIL_LOADER_ERROR,
+
+    });
+  }
+}
 function* getCategoryList({ payload }) {
   try {
     yield put({
@@ -346,6 +377,34 @@ function* getHomeVendors({ payload }) {
     });
   }
 }
+function* getVendorProducts({ payload }) {
+  const { data } = payload
+  try {
+    yield put({
+      type: Actions.VENDORS_PRODUCTS_LIST_LOADER,
+
+    });
+    const seller = yield call(getProductsByVendor, data);
+  console.log("array",seller?.data)
+
+    yield put({
+      type: Actions.VENDORS_PRODUCTS_LIST_SUCCESS,
+      payload: seller?.data
+
+    });
+    yield put({
+      type: Actions.VENDORS_PRODUCTS_LIST_LOADER_SUCCESS,
+
+    });
+
+  } catch (e) {
+    console.log("errorasd", e)
+    yield put({
+      type: Actions.VENDORS_PRODUCTS_LIST_LOADER_ERROR,
+
+    });
+  }
+}
 function* getNewArrivals({ payload }) {
   const { data } = payload
   try {
@@ -369,6 +428,32 @@ function* getNewArrivals({ payload }) {
     console.log("errorasd", e)
     yield put({
       type: Actions.HOME_NEW_ARRIVALS_LOADER_ERROR,
+
+    });
+  }
+}
+function* getHomeCategoriesData({ payload }) {
+  const { data } = payload
+  try {
+    yield put({
+      type: Actions.HOME_CATEGORIES_LOADER,
+
+    });
+    const seller = yield call(getHomeCategories, data);
+    yield put({
+      type: Actions.HOME_CATEGORIES_SUCCESS,
+      payload: seller?.data
+
+    });
+    yield put({
+      type: Actions.HOME_CATEGORIES_LOADER_SUCCESS,
+
+    });
+
+  } catch (e) {
+    console.log("errorasd", e)
+    yield put({
+      type: Actions.HOME_CATEGORIES_LOADER_ERROR,
 
     });
   }
@@ -844,10 +929,13 @@ export default function* authSaga() {
   yield takeEvery(Actions.BECOME_A_SELLER, becomeSeller)
   yield takeEvery(Actions.ADD_PRODUCT, addProductSaga)
   yield takeEvery(Actions.GET_CATEGORY_LIST, getCategoryList)
+  yield takeEvery(Actions.GET_HOME_CATEGORIES, getHomeCategoriesData)
   yield takeEvery(Actions.GET_HOME_VENDORS, getHomeVendors)
+  yield takeEvery(Actions.GET_PRODUCT_BY_VENDOR, getVendorProducts)
   yield takeEvery(Actions.GET_HOME_NEW_ARRIVALS, getNewArrivals)
   yield takeEvery(Actions.UPDATE_SELLER, updateSellerData)
   yield takeEvery(Actions.GET_SELLER_DETAILS, getSellerDataSaga)
+  yield takeEvery(Actions.GET_USER_DETAILS, getUserDataSaga)
   yield takeEvery(Actions.SIGN_IN_WITH_EMAIL, signInWithEmailSaga);
   yield takeEvery(Actions.SIGN_IN_WITH_MOBILE, signInWithMobileSaga);
   yield takeEvery(Actions.SIGN_UP_WITH_EMAIL, signUpWithEmailSaga);

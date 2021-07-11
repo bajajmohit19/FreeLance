@@ -6,6 +6,9 @@ import { notificationMessage } from 'src/utils/error';
 import { shippingAddressInit, billingAddressInit, errorInit as initError } from './config';
 
 const initState = fromJS({
+  homeCategoryLoader: false,
+  userDetailsLoader:false,
+  productsByVenderLoader: false,
   categoryListLoader: false,
   homeNewArrivalLoader: false,
   vendorListLoader: false,
@@ -62,6 +65,22 @@ export default function authReducer(state = initState, action = {}) {
     case Actions.BECOME_A_SELLER_SUCCESS:
       return state
         .set('isSeller', true)
+    case Actions.VENDORS_PRODUCTS_LIST_SUCCESS:
+      return state.set('productsByVendors', action?.payload)
+    case Actions.VENDORS_PRODUCTS_LIST_LOADER:
+      return state.set('productsByVenderLoader', true)
+    case Actions.VENDORS_PRODUCTS_LIST_LOADER_SUCCESS:
+      return state.set('productsByVenderLoader', false)
+    case Actions.VENDORS_PRODUCTS_LIST_LOADER_ERROR:
+      return state.set('productsByVenderLoader', false)
+    case Actions.HOME_CATEGORIES_SUCCESS:
+      return state.set('homeCategories', action?.payload)
+    case Actions.HOME_CATEGORIES_LOADER:
+      return state.set('homeCategoryLoader', true)
+    case Actions.HOME_CATEGORIES_LOADER_SUCCESS:
+      return state.set('homeCategoryLoader', false)
+    case Actions.HOME_CATEGORIES_LOADER_ERROR:
+      return state.set('homeCategoryLoader', false)
     case Actions.CATEGORY_LIST_LOADER:
       return state.set('categoryListLoader', true)
     case Actions.CATEGORY_LIST_LOADER_SUCCESS:
@@ -171,6 +190,14 @@ export default function authReducer(state = initState, action = {}) {
         .set('pendingGetCustomer', false)
         .set('shippingAddress', fromJS(action?.payload?.shippingAddress))
         .set('billingAddress', fromJS(action?.payload?.billingAddress));
+    case Actions.GET_USER_DETAIL_SUCCESS:
+      return state.set('userDetails', action?.payload)
+    case Actions.GET_USER_DETAIL_LOADER:
+      return state.set('userDetailsLoader', true)
+    case Actions.GET_USER_DETAIL_LOADER_SUCCESS:
+      return state.set('userDetailsLoader', false)
+    case Actions.GET_USER_DETAIL_LOADER_ERROR:
+      return state.set('userDetailsLoader', false)
     case Actions.GET_SELLER_DETAILS_SUCCESS:
       return state
         .set('sellerData', action?.payload);

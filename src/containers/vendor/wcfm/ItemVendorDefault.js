@@ -28,10 +28,10 @@ function ItemVendorDefault(props: Props) {
   const {
     store_name,
     store_slug,
-    gravatar,
+    image,
     banner_url,
     featured,
-    avg_review_rating,
+    avgerage_rating,
     total_review_count,
   } = store;
   const Component = onPress ? TouchableOpacity : View;
@@ -46,9 +46,9 @@ function ItemVendorDefault(props: Props) {
     });
   };
   const rating =
-    typeof avg_review_rating === 'number'
-      ? avg_review_rating
-      : parseInt(avg_review_rating, 10) || 0;
+    typeof avgerage_rating === 'number'
+      ? avgerage_rating
+      : parseInt(avgerage_rating, 10) || 0;
   return (
     <Component style={[styles.container, style && style]} {...componentProps}>
       <Image
@@ -66,8 +66,8 @@ function ItemVendorDefault(props: Props) {
             rounded
             size={60}
             source={
-              gravatar
-                ? {uri: gravatar}
+              image
+                ? {uri: image}
                 : require('src/assets/images/pDefault.png')
             }
           />
