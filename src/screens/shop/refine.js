@@ -153,7 +153,7 @@ class RefineScreen extends React.Component {
 
           {category ? (
             <ListItem
-              title={t('catalog:text_category')}
+              title={'efiu'}
               type="underline"
               small
               chevron

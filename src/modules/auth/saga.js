@@ -36,7 +36,9 @@ import {
   updateSeller,
   getSellerData,
   updateSellerLogo,
-  uploadCustomerLogo
+  uploadCustomerLogo,
+  getVendors,
+  getHomeNewArrivals
 } from './service';
 
 import { validatorForgotPassword, validatorChangePassword } from './validator';
@@ -315,6 +317,62 @@ function* getCategoryList({ payload }) {
     });
   }
 }
+function* getHomeVendors({ payload }) {
+  console.log("payload",payload)
+  const { data } = payload
+  try {
+    yield put({
+      type: Actions.VENDORS_LIST_LOADER,
+
+    });
+    const seller = yield call(getVendors, data);
+  console.log("array",seller?.data)
+
+    yield put({
+      type: Actions.HOME_VENDORS_SUCCESS,
+      payload: seller?.data
+
+    });
+    yield put({
+      type: Actions.VENDORS_LIST_LOADER_SUCCESS,
+
+    });
+
+  } catch (e) {
+    console.log("errorasd", e)
+    yield put({
+      type: Actions.VENDORS_LIST_LOADER_ERROR,
+
+    });
+  }
+}
+function* getNewArrivals({ payload }) {
+  const { data } = payload
+  try {
+    yield put({
+      type: Actions.HOME_NEW_ARRIVALS_LOADER,
+
+    });
+    const seller = yield call(getHomeNewArrivals, data);
+
+    yield put({
+      type: Actions.HOME_NEW_ARRIVALS_SUCCESS,
+      payload: seller?.data
+
+    });
+    yield put({
+      type: Actions.HOME_NEW_ARRIVALS_LOADER_SUCCESS,
+
+    });
+
+  } catch (e) {
+    console.log("errorasd", e)
+    yield put({
+      type: Actions.HOME_NEW_ARRIVALS_LOADER_ERROR,
+
+    });
+  }
+}
 /**
  * Sign In With OTP
  * @param data
@@ -442,12 +500,12 @@ function* addProductSaga({ payload }) {
     const { data } = payload;
     const language = yield select(languageSelector);
     const { data1, error, message, status } = yield call(addProduct, data);
-  
+
     console.log("product", data1, error, message, status)
     if (status === 409 || status === 422) {
       console.log("innn")
       yield call(showMessage, {
-        description: message?.poduct_name  || message?.description || message?.image || message?.product_images || message?.additional_info && 'Please Fill required fields',
+        description: message?.poduct_name || message?.description || message?.image || message?.product_images || message?.additional_info && 'Please Fill required fields',
         message: 'Please Fill Required Fields',
         type: 'info',
       });
@@ -786,6 +844,8 @@ export default function* authSaga() {
   yield takeEvery(Actions.BECOME_A_SELLER, becomeSeller)
   yield takeEvery(Actions.ADD_PRODUCT, addProductSaga)
   yield takeEvery(Actions.GET_CATEGORY_LIST, getCategoryList)
+  yield takeEvery(Actions.GET_HOME_VENDORS, getHomeVendors)
+  yield takeEvery(Actions.GET_HOME_NEW_ARRIVALS, getNewArrivals)
   yield takeEvery(Actions.UPDATE_SELLER, updateSellerData)
   yield takeEvery(Actions.GET_SELLER_DETAILS, getSellerDataSaga)
   yield takeEvery(Actions.SIGN_IN_WITH_EMAIL, signInWithEmailSaga);

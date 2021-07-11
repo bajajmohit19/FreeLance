@@ -201,7 +201,7 @@ class AddProduct extends React.Component {
             enablePhoneNumber,
             t,
         } = this.props;
-        console.log(categoryList[0]?.categories)
+        console.log(categoryList)
         const {
             data: {
                 email,
@@ -254,16 +254,24 @@ class AddProduct extends React.Component {
                                                 error={errors && errors.product_name}
                                             />
                                             {/* <Text>Category-Id</Text> */}
-                                            {/* <View style={{ borderWidth: 1, borderColor: '#BDBDBD', borderRadius: 4 }}>
-                                                <Picker selectedValue={category_id} onValueChange={(value) => 
+                                            <View style={{ borderWidth: 1, borderColor: '#e9ecef', borderRadius: 4 }}>
+
+                                                <Picker selectedValue={category_id} onValueChange={(value) =>
                                                     this.changeData({ category_id: value })
 
                                                 } >
-                                                    <Picker.Item label="jave" value="java" />
-                                                </Picker>
-                                            </View> */}
+                                                    {categoryList && categoryList.map((value, index) => (
+                                                        // console.log(value)
+                                                        value?.categories.map(value1 => (
+                                                            <Picker.Item label={`${value?.name} (${value1?.name}) *`} value={value1?.category_enc_id} />
 
-                                            <Input
+                                                        ))
+                                                    ))}
+                                                </Picker>
+                                            </View>
+
+
+                                            {/* <Input
                                                 type={'select'}
                                                 label={t('profile:category_id')}
                                                 value={category_id}
@@ -271,7 +279,7 @@ class AddProduct extends React.Component {
                                                     this.changeData({ category_id: value })
                                                 }
                                                 error={errors && errors.category_id}
-                                            />
+                                            /> */}
                                             <Input
                                                 label={t('profile:additional_info')}
                                                 value={additional_info}

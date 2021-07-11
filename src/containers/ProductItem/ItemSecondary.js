@@ -29,7 +29,7 @@ const ItemSecondary = ({item, width, height, navigationType, style, theme}) => {
     return null;
   }
 
-  const {name, images, price_format, on_sale, is_new, type, id} = item;
+  const {name, image, price_format, on_sale, is_new, type, id} = item;
 
   const productItemImageStyle = {
     width,
@@ -48,8 +48,8 @@ const ItemSecondary = ({item, width, height, navigationType, style, theme}) => {
       }>
       <Image
         source={
-          images && images.length
-            ? {uri: images[0].src, cache: 'reload'}
+          image && image.length
+            ? {uri: images, cache: 'reload'}
             : require('src/assets/images/pDefault.png')
         }
         style={productItemImageStyle}

@@ -85,7 +85,7 @@ class CategoryList extends Component {
               title={
                 heading.text && heading.text[language]
                   ? heading.text[language]
-                  : t('common:text_category')
+                  : 'asdsad'
               }
               style={heading.style && heading.style}
               containerStyle={styles.header}

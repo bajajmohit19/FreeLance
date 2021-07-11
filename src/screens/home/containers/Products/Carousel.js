@@ -55,7 +55,7 @@ const Carousel = ({
       }}>
       {data.map((item, index) => (
         <View
-          key={item.id}
+          key={item?.product_enc_id}
           style={{
             marginLeft: separator / 2,
             marginRight:

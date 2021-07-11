@@ -13,11 +13,11 @@ type Props = {
 
 const ItemSecondary = (props: Props) => {
   const {store, style, onPress} = props;
-  const {store_name, gravatar, avg_review_rating} = store;
+  const {shop_name, logo, average_rating, image, product_name, original_price} = store;
 
   const Component = onPress ? TouchableOpacity : View;
   const componentProps = onPress ? {onPress} : {};
-  const rating = parseFloat(avg_review_rating) || 0.0;
+  const rating = parseFloat(average_rating) || 0.0;
   return (
     <ThemeConsumer>
       {({theme}) => (
@@ -30,20 +30,29 @@ const ItemSecondary = (props: Props) => {
           {...componentProps}>
           <Avatar
             source={
-              gravatar ? {uri: gravatar} : require('src/assets/images/pDefault.png')
+              logo ? {uri: logo} : image ? {uri: image}  : require('src/assets/images/pDefault.png')
             }
             size={60}
             rounded
             containerStyle={styles.image}
           />
           <Text h5 medium style={styles.name}>
-            {store_name}
+            {shop_name}
           </Text>
           <View style={styles.viewRating}>
             <Text h5 colorThird medium style={styles.textRating}>
-              {rating.toFixed(1)}
+              {/* {console.log(average_rating  == null? "noo" :  average_rating.toFixed(1))} */}
+              {average_rating  == null ? '0': average_rating}
             </Text>
             <Icon name="star" type="font-awesome" color={yellow} size={13} />
+            
+
+          </View>
+          <View>
+          <Text>
+            {original_price}
+
+            </Text>
           </View>
         </Component>
       )}

@@ -7,6 +7,8 @@ import { shippingAddressInit, billingAddressInit, errorInit as initError } from 
 
 const initState = fromJS({
   categoryListLoader: false,
+  homeNewArrivalLoader: false,
+  vendorListLoader: false,
   isLogin: false,
   pending: false,
   pendingAddProduct: false,
@@ -66,9 +68,27 @@ export default function authReducer(state = initState, action = {}) {
       return state.set('categoryListLoader', false)
     case Actions.CATEGORY_LIST_LOADER_ERROR:
       return state.set('categoryListLoader', false)
+    case Actions.VENDORS_LIST_LOADER:
+      return state.set('vendorListLoader', true)
+    case Actions.VENDORS_LIST_LOADER_SUCCESS:
+      return state.set('vendorListLoader', false)
+    case Actions.VENDORS_LIST_LOADER_ERROR:
+      return state.set('vendorListLoader', false)
+    case Actions.HOME_NEW_ARRIVALS_LOADER:
+      return state.set('homeNewArrivalLoader', true)
+    case Actions.HOME_NEW_ARRIVALS_LOADER_SUCCESS:
+      return state.set('homeNewArrivalLoader', false)
+    case Actions.HOME_NEW_ARRIVALS_LOADER_ERROR:
+      return state.set('homeNewArrivalLoader', false)
+    case Actions.HOME_NEW_ARRIVALS_SUCCESS:
+      return state
+        .set('homeNewArrivals', action?.payload);
     case Actions.CATEGORY_LIST_SUCCESS:
       return state
         .set('categoryList', action?.payload);
+    case Actions.HOME_VENDORS_SUCCESS:
+      return state
+        .set('vendorsList', action?.payload);
     case Actions.SIGN_IN_WITH_EMAIL_ERROR:
       const errorSignIn = notificationMessage(action.payload);
       return state.set('pending', false).set('loginError', fromJS(errorSignIn));

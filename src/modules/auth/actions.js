@@ -65,6 +65,23 @@ export function getCategories(cb = () => { }) {
     cb
   };
 }
+export function getHomeVendors(data) {
+  return {
+    type: Actions.GET_HOME_VENDORS,
+    payload :{
+      data
+    }
+  };
+}
+export function getNewArrivals(data) {
+  return {
+    type: Actions.GET_HOME_NEW_ARRIVALS,
+    payload :{
+      data
+    }
+  };
+}
+
 
 /**
  * Login with google

@@ -132,8 +132,8 @@ const get1 = (url, data, method = 'GET') => {
 
   return new Promise(async (next, error) => {
     const token = await _getToken()
+    axios.get(url, { params: { ...data }, ...token }).then((d) => {
 
-    axios.get(url, token).then((d) => {
       next(d.data)
     }).catch((err) => {
       console.log("ERRROR", err)
