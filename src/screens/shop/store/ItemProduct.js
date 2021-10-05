@@ -73,7 +73,7 @@ const ItemProduct = React.memo((props) => {
               <View style={styles.viewWishList}>
                 <WishListIcon
                   product_id={id}
-                  size={15}
+                  size={14}
                   color={theme.colors.primary}
                   colorSelect={theme.colors.primary}
                   containerStyle={styles.iconWishlist}
@@ -127,8 +127,8 @@ const styles = StyleSheet.create({
     borderBottomWidth: 1,
   },
   image: {
-    width: 78,
-    height: 93,
+    width: 77,
+    height: 92,
   },
   content: {
     flex: 1,
